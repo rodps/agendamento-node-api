@@ -4,6 +4,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: 'root',
+  dateStrings: true,
   database: process.env.NODE_ENV === 'test' ? 'consultas_api_test' : 'consultas_api'
 })
 

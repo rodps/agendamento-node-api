@@ -6,9 +6,9 @@ const checkNodeEnv = (): void => {
   }
 }
 
-export const deleteMedicosTable = async (): Promise<void> => {
+export const truncateTable = async (tableName: string): Promise<void> => {
   checkNodeEnv()
-  await db.query('DELETE FROM medicos')
+  await db.query('TRUNCATE TABLE ' + tableName)
 }
 
 export const closeDbConnection = async (): Promise<void> => {
