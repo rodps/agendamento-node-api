@@ -28,4 +28,12 @@ export class MedicoRepository implements IMedicoRepository {
     )
     return rows
   }
+
+  async buscarPorId (id: number): Promise<Medico | null> {
+    const [rows] = await db.query<MedicoRowDataPacket[]>(
+      'SELECT * from medicos WHERE id = ?',
+      [id]
+    )
+    return rows.length > 0 ? rows[0] : null
+  }
 }

@@ -1,4 +1,4 @@
-import { closeDbConnection, truncateTable } from '../../helpers'
+import { closeDbConnection, deleteAllFromTable } from '../../helpers'
 import request from 'supertest'
 import app from '../../../src/express/app'
 
@@ -8,7 +8,7 @@ describe('Cadastrar Paciente', () => {
   })
 
   beforeEach(async () => {
-    await truncateTable('pacientes')
+    await deleteAllFromTable('pacientes')
   })
 
   it('deve retornar 201', async () => {

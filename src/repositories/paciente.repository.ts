@@ -22,7 +22,7 @@ export class PacienteRepository implements IPacienteRepository {
       nome: pacienteRow.nome,
       telefone: pacienteRow.telefone,
       cpf: pacienteRow.cpf,
-      dataNascimento: pacienteRow.data_nascimento
+      dataNascimento: new Date(pacienteRow.data_nascimento as string).toISOString().substring(0, 10)
     }
   }
 
@@ -38,5 +38,23 @@ export class PacienteRepository implements IPacienteRepository {
       cpf: row.cpf,
       dataNascimento: row.data_nascimento
     }))
+  }
+
+  async buscarPorId (id: number): Promise<Paciente | null> {
+    const [rows] = await db.query<RowDataPacket[]>(
+      'SELECT * from pacientes WHERE id = ?',
+      [id]
+    )
+    if (rows.length === 0) {
+      return null
+    }
+    const pacienteRow = rows[0]
+    return {
+      id: pacienteRow.id,
+      nome: pacienteRow.nome,
+      telefone: pacienteRow.telefone,
+      cpf: pacienteRow.cpf,
+      dataNascimento: pacienteRow.data_nascimento
+    }
   }
 }

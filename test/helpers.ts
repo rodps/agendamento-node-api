@@ -1,14 +1,15 @@
 import db from '../src/db'
 
-const checkNodeEnv = (): void => {
+export const checkNodeEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
     throw new Error('NODE_ENV must be "test"')
   }
 }
 
-export const truncateTable = async (tableName: string): Promise<void> => {
+export const deleteAllFromTable = async (tableName: string): Promise<void> => {
   checkNodeEnv()
-  await db.query('TRUNCATE TABLE ' + tableName)
+  await db.query('DELETE FROM ' + tableName)
+  await db.query('ALTER TABLE ' + tableName + ' AUTO_INCREMENT = 1')
 }
 
 export const closeDbConnection = async (): Promise<void> => {
