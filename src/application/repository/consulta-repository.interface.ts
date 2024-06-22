@@ -1,4 +1,4 @@
-import { type Consulta } from './consulta.entity'
+import { type Consulta } from '../entity/consulta.entity'
 
 export interface IConsultaRepository {
   insert: (consulta: Consulta) => Promise<Consulta>

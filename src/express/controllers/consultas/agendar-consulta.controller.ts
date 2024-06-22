@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express'
-import { AgendarConsultaService } from '../../../application/domains/consulta/agendar/agendar-consulta.service'
-import { AgendarConsultaDto } from '../../../application/domains/consulta/agendar/dto/agendar-consulta.dto'
+import { AgendarConsultaService } from '../../../application/domain/consulta/agendar/agendar-consulta.service'
+import { AgendarConsultaDto } from '../../../application/domain/consulta/agendar/dto/agendar-consulta.dto'
 import { ConsultaRepository } from '../../../repositories/consulta.repository'
 import { BaseController } from '../base.controller'
 import { MedicoRepository } from '../../../repositories/medico.repository'

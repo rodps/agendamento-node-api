@@ -1,4 +1,4 @@
-import { type Consulta, type ConsultaStatus } from '../../consulta.entity'
+import { type Consulta, type ConsultaStatus } from '../../../../entity/consulta.entity'
 
 export class AgendarConsultaResponseDto {
   readonly id: number
@@ -9,10 +9,7 @@ export class AgendarConsultaResponseDto {
   readonly status: ConsultaStatus
 
   constructor (consulta: Consulta) {
-    if (consulta.id === undefined) {
-      throw new Error('ID da consulta não informado')
-    }
-    this.id = consulta.id
+    this.id = consulta.getIdOrThrow()
     this.dataInicio = consulta.dataInicio
     this.dataFim = consulta.dataFim
     this.medicoId = consulta.medicoId

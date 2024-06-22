@@ -1,8 +1,8 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import { type CadastrarMedicoDto } from '../application/domains/medico/cadastrar/dto/cadastrar-medico.dto'
-import { type Medico } from '../application/domains/medico/medico.entity'
-import { type IMedicoRepository } from '../application/domains/medico/repository.interface'
+import { type CadastrarMedicoDto } from '../application/domain/medico/cadastrar/dto/cadastrar-medico.dto'
 import db from '../db'
+import { type IMedicoRepository } from '../application/repository/medico-repository.interface'
+import { Medico } from '../application/entity/medico.entity'
 
 interface MedicoRowDataPacket extends Medico, RowDataPacket {}
 
@@ -18,7 +18,7 @@ export class MedicoRepository implements IMedicoRepository {
       [result.insertId]
     )
 
-    return rows[0]
+    return new Medico(rows[0].id, rows[0].nome, rows[0].crm, rows[0].especialidade)
   }
 
   async buscarPorCrm (crm: string): Promise<Medico[]> {
@@ -34,6 +34,6 @@ export class MedicoRepository implements IMedicoRepository {
       'SELECT * from medicos WHERE id = ?',
       [id]
     )
-    return rows.length > 0 ? rows[0] : null
+    return rows.length > 0 ? new Medico(rows[0].id, rows[0].nome, rows[0].crm, rows[0].especialidade) : null
   }
 }

@@ -1,5 +1,6 @@
+import { Paciente } from '../../../entity/paciente.entity'
 import { ApplicationError } from '../../../errors/application.error'
-import { type IPacienteRepository } from '../repository.interface'
+import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
 import { CadastrarPacienteResponseDto } from './dto/cadastrar-paciente-response.dto'
 import { type CadastrarPacienteDto } from './dto/cadastrar-paciente.dto'
 
@@ -10,7 +11,13 @@ export class CadastrarPacienteService {
     if (await this._existeCpf(dto.cpf)) {
       throw new ApplicationError('Este CPF já existe')
     }
-    const paciente = await this._pacienteRepository.insert(dto)
+    const paciente = await this._pacienteRepository.insert(new Paciente(
+      null,
+      dto.nome,
+      dto.telefone,
+      dto.cpf,
+      dto.dataNascimento
+    ))
     return new CadastrarPacienteResponseDto(paciente)
   }
 

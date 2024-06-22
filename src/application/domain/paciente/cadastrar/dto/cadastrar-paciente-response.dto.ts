@@ -1,4 +1,4 @@
-import { type Paciente } from '../../paciente.entity'
+import { type Paciente } from '../../../../entity/paciente.entity'
 
 export class CadastrarPacienteResponseDto {
   readonly id: number
@@ -8,7 +8,7 @@ export class CadastrarPacienteResponseDto {
   readonly dataNascimento: string
 
   constructor (paciente: Paciente) {
-    this.id = paciente.id
+    this.id = paciente.getIdOrThrow()
     this.nome = paciente.nome
     this.telefone = paciente.telefone
     this.cpf = paciente.cpf

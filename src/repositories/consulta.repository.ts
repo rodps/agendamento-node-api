@@ -1,7 +1,7 @@
 import { type RowDataPacket, type ResultSetHeader } from 'mysql2'
-import { type Consulta } from '../application/domains/consulta/consulta.entity'
-import { type IConsultaRepository } from '../application/domains/consulta/repository.interface'
 import db from '../db'
+import { type IConsultaRepository } from '../application/repository/consulta-repository.interface'
+import { Consulta } from '../application/entity/consulta.entity'
 
 interface ConsultaRowDataPacket extends RowDataPacket, Consulta {}
 
@@ -12,7 +12,7 @@ export class ConsultaRepository implements IConsultaRepository {
       [dataInicio, dataFim]
     )
     const [rows] = await db.query<ConsultaRowDataPacket[]>(sql)
-    return rows
+    return rows.map((row) => new Consulta(row.id, row.dataInicio, row.dataFim, row.medicoId, row.pacienteId, row.status))
   }
 
   async insert (consulta: Consulta): Promise<Consulta> {
@@ -32,6 +32,6 @@ export class ConsultaRepository implements IConsultaRepository {
       [result.insertId]
     )
 
-    return rows[0]
+    return new Consulta(rows[0].id, rows[0].dataInicio, rows[0].dataFim, rows[0].medicoId, rows[0].pacienteId, rows[0].status)
   }
 }

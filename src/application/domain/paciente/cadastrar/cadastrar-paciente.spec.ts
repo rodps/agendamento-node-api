@@ -1,7 +1,8 @@
 import { mock } from 'jest-mock-extended'
 import { CadastrarPacienteService } from './cadastrar-paciente.service'
-import { type IPacienteRepository } from '../repository.interface'
 import { ApplicationError } from '../../../errors/application.error'
+import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
+import { Paciente } from '../../../entity/paciente.entity'
 
 describe('Cadastrar Paciente', () => {
   const pacienteRepository = mock<IPacienteRepository>()
@@ -20,13 +21,9 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce({
-      id: 1,
-      nome: 'nome',
-      telefone: '123',
-      cpf: '123',
-      dataNascimento: '2022-01-01'
-    })
+    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce(
+      new Paciente(1, 'nome', '123', '123', '2022-01-01')
+    )
     jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([])
 
     // act
@@ -51,13 +48,9 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([{
-      id: 1,
-      nome: 'nome',
-      telefone: '123',
-      cpf: '123',
-      dataNascimento: '2022-01-01'
-    }])
+    jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([
+      new Paciente(1, 'nome', '123', '123', '2022-01-01')
+    ])
 
     // assert
     await expect(sut.execute(dto)).rejects.toThrow(new ApplicationError('Este CPF já existe'))
@@ -72,13 +65,9 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce({
-      id: 1,
-      nome: 'nome',
-      telefone: '123',
-      cpf: '123',
-      dataNascimento: '2022-01-01'
-    })
+    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce(
+      new Paciente(1, 'nome', '123', '123', '2022-01-01')
+    )
     jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([])
 
     // act
@@ -86,6 +75,6 @@ describe('Cadastrar Paciente', () => {
 
     // assert
     expect(pacienteRepository.insert).toHaveBeenCalledTimes(1)
-    expect(pacienteRepository.insert).toHaveBeenCalledWith(dto)
+    expect(pacienteRepository.insert).toHaveBeenCalledWith(new Paciente(null, 'nome', '123', '123', '2022-01-01'))
   })
 })

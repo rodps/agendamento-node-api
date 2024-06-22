@@ -1,8 +1,8 @@
+import { Consulta, ConsultaStatus } from '../../../entity/consulta.entity'
 import { ApplicationError } from '../../../errors/application.error'
-import { type IMedicoRepository } from '../../medico/repository.interface'
-import { type IPacienteRepository } from '../../paciente/repository.interface'
-import { ConsultaStatus } from '../consulta.entity'
-import { type IConsultaRepository } from '../repository.interface'
+import { type IConsultaRepository } from '../../../repository/consulta-repository.interface'
+import { type IMedicoRepository } from '../../../repository/medico-repository.interface'
+import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
 import { AgendarConsultaResponseDto } from './dto/agendar-consulta-response.dto'
 import { type AgendarConsultaDto } from './dto/agendar-consulta.dto'
 
@@ -30,13 +30,9 @@ export class AgendarConsultaService {
       throw new ApplicationError('pacienteId não encontrado')
     }
 
-    const consulta = await this._consultaRepository.insert({
-      dataInicio: dto.dataInicio,
-      dataFim: dto.dataFim,
-      medicoId: dto.medicoId,
-      pacienteId: dto.pacienteId,
-      status: ConsultaStatus.Pendente
-    })
+    const consulta = await this._consultaRepository.insert(
+      new Consulta(null, dto.dataInicio, dto.dataFim, dto.medicoId, dto.pacienteId, ConsultaStatus.Pendente)
+    )
 
     return new AgendarConsultaResponseDto(consulta)
   }

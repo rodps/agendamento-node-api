@@ -1,8 +1,8 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import { type CadastrarPacienteDto } from '../application/domains/paciente/cadastrar/dto/cadastrar-paciente.dto'
-import { type Paciente } from '../application/domains/paciente/paciente.entity'
-import { type IPacienteRepository } from '../application/domains/paciente/repository.interface'
+import { type CadastrarPacienteDto } from '../application/domain/paciente/cadastrar/dto/cadastrar-paciente.dto'
 import db from '../db'
+import { type IPacienteRepository } from '../application/repository/paciente-repository.interface'
+import { Paciente } from '../application/entity/paciente.entity'
 
 export class PacienteRepository implements IPacienteRepository {
   async insert (paciente: CadastrarPacienteDto): Promise<Paciente> {
@@ -17,13 +17,13 @@ export class PacienteRepository implements IPacienteRepository {
     )
     const pacienteRow = rows[0]
 
-    return {
-      id: pacienteRow.id,
-      nome: pacienteRow.nome,
-      telefone: pacienteRow.telefone,
-      cpf: pacienteRow.cpf,
-      dataNascimento: new Date(pacienteRow.data_nascimento as string).toISOString().substring(0, 10)
-    }
+    return new Paciente(
+      pacienteRow.id as number,
+      pacienteRow.nome as string,
+      pacienteRow.telefone as string,
+      pacienteRow.cpf as string,
+      new Date(pacienteRow.data_nascimento as string).toISOString().substring(0, 10)
+    )
   }
 
   async buscarPorCpf (cpf: string): Promise<Paciente[]> {
@@ -31,13 +31,15 @@ export class PacienteRepository implements IPacienteRepository {
       'SELECT * from pacientes WHERE cpf = ?',
       [cpf]
     )
-    return rows.map((row) => ({
-      id: row.id,
-      nome: row.nome,
-      telefone: row.telefone,
-      cpf: row.cpf,
-      dataNascimento: row.data_nascimento
-    }))
+    return rows.map((row) => (
+      new Paciente(
+        row.id as number,
+        row.nome as string,
+        row.telefone as string,
+        row.cpf as string,
+        row.data_nascimento as string
+      )
+    ))
   }
 
   async buscarPorId (id: number): Promise<Paciente | null> {
@@ -49,12 +51,12 @@ export class PacienteRepository implements IPacienteRepository {
       return null
     }
     const pacienteRow = rows[0]
-    return {
-      id: pacienteRow.id,
-      nome: pacienteRow.nome,
-      telefone: pacienteRow.telefone,
-      cpf: pacienteRow.cpf,
-      dataNascimento: pacienteRow.data_nascimento
-    }
+    return new Paciente(
+      pacienteRow.id as number,
+      pacienteRow.nome as string,
+      pacienteRow.telefone as string,
+      pacienteRow.cpf as string,
+      pacienteRow.data_nascimento as string
+    )
   }
 }

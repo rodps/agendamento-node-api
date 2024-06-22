@@ -1,11 +1,11 @@
 import { mock } from 'jest-mock-extended'
-import { type IConsultaRepository } from '../repository.interface'
 import { AgendarConsultaService } from './agendar-consulta.service'
-import { ConsultaStatus } from '../consulta.entity'
 import { type AgendarConsultaDto } from './dto/agendar-consulta.dto'
 import { ApplicationError } from '../../../errors/application.error'
-import { type IMedicoRepository } from '../../medico/repository.interface'
-import { type IPacienteRepository } from '../../paciente/repository.interface'
+import { type IMedicoRepository } from '../../../repository/medico-repository.interface'
+import { type IConsultaRepository } from '../../../repository/consulta-repository.interface'
+import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
+import { Consulta, ConsultaStatus } from '../../../entity/consulta.entity'
 
 describe('AgendarConsultaService', () => {
   const consultaRepository = mock<IConsultaRepository>()
@@ -13,14 +13,9 @@ describe('AgendarConsultaService', () => {
   const pacienteRepository = mock<IPacienteRepository>()
 
   consultaRepository.buscarPorData.mockResolvedValue([])
-  consultaRepository.insert.mockResolvedValue({
-    id: 1,
-    dataInicio: new Date('2022-01-01 00:00:00'),
-    dataFim: new Date('2022-01-01 01:00:00'),
-    medicoId: 1,
-    pacienteId: 1,
-    status: ConsultaStatus.Pendente
-  })
+  consultaRepository.insert.mockResolvedValue(
+    new Consulta(1, new Date('2022-01-01 00:00:00'), new Date('2022-01-01 01:00:00'), 1, 1, ConsultaStatus.Pendente)
+  )
 
   const sut = new AgendarConsultaService(consultaRepository, medicoRepository, pacienteRepository)
 
@@ -42,7 +37,7 @@ describe('AgendarConsultaService', () => {
 
     // assert
     expect(consultaRepository.insert).toHaveBeenCalledTimes(1)
-    expect(consultaRepository.insert).toHaveBeenCalledWith({ ...data, status: ConsultaStatus.Pendente })
+    expect(consultaRepository.insert).toHaveBeenCalledWith(new Consulta(null, data.dataInicio, data.dataFim, data.medicoId, data.pacienteId, ConsultaStatus.Pendente))
   })
 
   test('deve retornar um erro quando o horário estiver indisponível', async () => {
@@ -54,11 +49,14 @@ describe('AgendarConsultaService', () => {
       pacienteId: 1
     }
     jest.spyOn(consultaRepository, 'buscarPorData').mockResolvedValueOnce([
-      {
-        id: 1,
-        ...data,
-        status: ConsultaStatus.Pendente
-      }
+      new Consulta(
+        1,
+        data.dataInicio,
+        data.dataFim,
+        data.medicoId,
+        data.pacienteId,
+        ConsultaStatus.Pendente
+      )
     ])
 
     // act
