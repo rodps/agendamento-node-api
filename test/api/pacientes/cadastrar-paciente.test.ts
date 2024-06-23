@@ -14,76 +14,76 @@ describe('Cadastrar Paciente', () => {
   it('deve retornar 201', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: 'nome',
-      telefone: '123',
-      cpf: '123',
+      telefone: '12345678',
+      cpf: '12345678910',
       dataNascimento: '2022-01-01'
     })
 
     expect(response.status).toBe(201)
     expect(response.body.id).toBeDefined()
     expect(response.body.nome).toBe('nome')
-    expect(response.body.telefone).toBe('123')
-    expect(response.body.cpf).toBe('123')
+    expect(response.body.telefone).toBe('12345678')
+    expect(response.body.cpf).toBe('12345678910')
     expect(response.body.dataNascimento).toBe('2022-01-01')
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: '',
-      telefone: '123',
-      cpf: '123',
+      telefone: '12345678',
+      cpf: '12345678910',
       dataNascimento: '2022-01-01'
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('Nome obrigatorio')
+    expect(response.body.erro).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o telefone for vazio', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: 'nome',
       telefone: '',
-      cpf: '123',
+      cpf: '12345678910',
       dataNascimento: '2022-01-01'
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('Telefone obrigatorio')
+    expect(response.body.erro).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o cpf for vazio', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: 'nome',
-      telefone: '123',
+      telefone: '12345678',
       cpf: '',
       dataNascimento: '2022-01-01'
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('CPF obrigatorio')
+    expect(response.body.erro).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a data de nascimento for vazia', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: 'nome',
-      telefone: '123',
-      cpf: '123',
+      telefone: '12345678',
+      cpf: '12345678910',
       dataNascimento: ''
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('Data de nascimento obrigatorio')
+    expect(response.body.erro).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a data de nascimento for invalida', async () => {
     const response = await request(app).post('/pacientes').send({
       nome: 'nome',
-      telefone: '123',
-      cpf: '123',
+      telefone: '12345678',
+      cpf: '12345678911',
       dataNascimento: '01-01-2022'
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('Data de nascimento invalida')
+    expect(response.body.erro).toHaveLength(1)
   })
 })

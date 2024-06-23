@@ -9,13 +9,9 @@ export class CadastrarMedicoController extends BaseController {
     const medicoRepository = new MedicoRepository()
     const cadastrarService = new CadastrarMedicoService(medicoRepository)
 
-    const data = new CadastrarMedicoDto({
-      nome: req.body.nome,
-      crm: req.body.crm,
-      especialidade: req.body.especialidade
-    })
-
-    const medico = await cadastrarService.execute(data)
+    const medico = await cadastrarService.execute(
+      new CadastrarMedicoDto(req.body)
+    )
 
     res.status(201).json(medico)
   }

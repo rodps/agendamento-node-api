@@ -9,14 +9,9 @@ export class CadastrarPacienteController extends BaseController {
     const pacienteRepository = new PacienteRepository()
     const cadastrarService = new CadastrarPacienteService(pacienteRepository)
 
-    const data = new CadastrarPacienteDto({
-      nome: req.body.nome,
-      cpf: req.body.cpf,
-      telefone: req.body.telefone,
-      dataNascimento: req.body.dataNascimento
-    })
-
-    const paciente = await cadastrarService.execute(data)
+    const paciente = await cadastrarService.execute(
+      new CadastrarPacienteDto(req.body)
+    )
 
     res.status(201).json(paciente)
   }

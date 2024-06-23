@@ -1,28 +1,23 @@
-import { ApplicationError } from '../../../../errors/application.error'
-
-interface CadastrarMedicoParams {
-  nome: string
-  crm: string
-  especialidade: string
-}
+import { z } from 'zod'
+import { ValidationError } from '../../../../errors/validation.error'
 
 export class CadastrarMedicoDto {
   readonly nome: string
   readonly crm: string
   readonly especialidade: string
 
-  constructor ({ nome, crm, especialidade }: CadastrarMedicoParams) {
-    if (nome === undefined || nome.length === 0) {
-      throw new ApplicationError('Nome obrigatorio')
+  constructor (data: any) {
+    const result = z.object({
+      nome: z.string().min(3),
+      crm: z.string().min(6),
+      especialidade: z.string().min(3)
+    }).safeParse(data)
+
+    if (!result.success) {
+      throw new ValidationError(result.error.issues)
     }
-    if (crm === undefined || crm.length === 0) {
-      throw new ApplicationError('CRM obrigatorio')
-    }
-    if (especialidade === undefined || especialidade.length === 0) {
-      throw new ApplicationError('Especialidade obrigatorio')
-    }
-    this.nome = nome
-    this.crm = crm
-    this.especialidade = especialidade
+    this.nome = result.data.nome
+    this.crm = result.data.crm
+    this.especialidade = result.data.especialidade
   }
 }

@@ -1,11 +1,5 @@
-import { ApplicationError } from '../../../../errors/application.error'
-
-interface CadastrarPacienteParams {
-  nome: string
-  telefone: string
-  cpf: string
-  dataNascimento: string
-}
+import { z } from 'zod'
+import { ValidationError } from '../../../../errors/validation.error'
 
 export class CadastrarPacienteDto {
   readonly nome: string
@@ -13,30 +7,21 @@ export class CadastrarPacienteDto {
   readonly cpf: string
   readonly dataNascimento: string
 
-  constructor ({ nome, telefone, cpf, dataNascimento }: CadastrarPacienteParams) {
-    if (nome === undefined || nome.length === 0) {
-      throw new ApplicationError('Nome obrigatorio')
+  constructor (data: any) {
+    const result = z.object({
+      nome: z.string().min(3),
+      telefone: z.string().min(8),
+      cpf: z.string().min(11),
+      dataNascimento: z.string().date()
+    }).safeParse(data)
+
+    if (!result.success) {
+      throw new ValidationError(result.error.issues)
     }
 
-    if (telefone === undefined || telefone.length === 0) {
-      throw new ApplicationError('Telefone obrigatorio')
-    }
-
-    if (cpf === undefined || cpf.length === 0) {
-      throw new ApplicationError('CPF obrigatorio')
-    }
-
-    if (dataNascimento === undefined || dataNascimento.length === 0) {
-      throw new ApplicationError('Data de nascimento obrigatorio')
-    }
-
-    if (!/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/.test(dataNascimento)) {
-      throw new ApplicationError('Data de nascimento invalida')
-    }
-
-    this.nome = nome
-    this.telefone = telefone
-    this.cpf = cpf
-    this.dataNascimento = dataNascimento
+    this.nome = result.data.nome
+    this.telefone = result.data.telefone
+    this.cpf = result.data.cpf
+    this.dataNascimento = result.data.dataNascimento
   }
 }
