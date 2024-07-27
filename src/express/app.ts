@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import express from 'express'
-import { medicosRouter } from './routes/medicos.route'
-import { pacientesRouter } from './routes/pacientes.route'
+import { errorHandler } from './middlewares/error-handler.middleware'
 
 const app = express()
 const router = express.Router()
 
-require('./routes/consultas.route')(router)
+require('./routes/consultas.router')(router)
+require('./routes/medicos.router')(router)
+require('./routes/pacientes.router')(router)
 
 app.use(express.json())
 app.use(router)
-app.use(medicosRouter)
-app.use(pacientesRouter)
+app.use(errorHandler)
 
 export default app
