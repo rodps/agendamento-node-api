@@ -1,5 +1,5 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import { type CadastrarMedicoDto } from '../application/domain/medico/cadastrar/dto/cadastrar-medico.dto'
+import { type CadastrarMedicoDto } from '../application/services/medico/cadastrar/dto/cadastrar-medico.dto'
 import db from '../db'
 import { type IMedicoRepository } from '../application/repository/medico-repository.interface'
 import { Medico } from '../application/entity/medico.entity'

@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { ApplicationError } from '../../application/errors/application.error'
-import { ValidationError } from '../../application/errors/validation.error'
+import { ZodError } from 'zod'
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
   if (err === undefined) {
@@ -10,8 +10,12 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
 
   if (err instanceof ApplicationError) {
     res.status(err.statusCode).json({ erro: err.message, type: 'APPLICATION_ERROR' })
-  } else if (err instanceof ValidationError) {
-    res.status(400).json({ erro: err.errors, type: 'VALIDATION_ERROR' })
+  } if (err instanceof ZodError) {
+    const errors = err.errors.map((issue: any) => ({
+      path: issue.path,
+      message: issue.message
+    }))
+    res.status(400).json({ erro: errors })
   } else {
     console.log(err)
     res.status(500).json({ erro: 'Internal server error', type: 'INTERNAL_SERVER_ERROR' })
