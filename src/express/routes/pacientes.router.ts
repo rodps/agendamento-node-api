@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { type Router } from 'express'
-import { pacientesController } from '../controllers/pacientes.controller'
+import { PacienteRepository } from '../../repositories/paciente.repository'
+import { PacientesController } from '../controllers/pacientes.controller'
 
 module.exports = (router: Router) => {
-  router.post('/pacientes', pacientesController.cadastrar)
+  const controller = new PacientesController(new PacienteRepository())
+
+  router.post('/pacientes', controller.cadastrar)
 }

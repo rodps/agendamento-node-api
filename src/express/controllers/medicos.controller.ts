@@ -1,13 +1,16 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { CadastrarMedicoService } from '../../application/services/medico/cadastrar/cadastrar-medico.service'
-import { MedicoRepository } from '../../repositories/medico.repository'
+import { type MedicoRepository } from '../../repositories/medico.repository'
 import { z } from 'zod'
 
-const medicosController = {
-  cadastrar: async (req: Request, res: Response, next: NextFunction) => {
+export class MedicosController {
+  constructor (
+    private readonly medicoRepository: MedicoRepository
+  ) {}
+
+  public cadastrar = (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const medicoRepository = new MedicoRepository()
-      const cadastrarService = new CadastrarMedicoService(medicoRepository)
+      const cadastrarService = new CadastrarMedicoService(this.medicoRepository)
 
       const data = z.object({
         nome: z.string().min(3),
@@ -15,12 +18,13 @@ const medicosController = {
         especialidade: z.string().min(3)
       }).parse(req.body)
 
-      const medico = await cadastrarService.execute(data)
-      res.status(201).json(medico)
+      cadastrarService
+        .execute(data)
+        .then(medico => {
+          res.status(201).json(medico)
+        }).catch(next)
     } catch (err) {
       next(err)
     }
   }
 }
-
-export { medicosController }
