@@ -2,17 +2,15 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { CadastrarPacienteService } from '../../application/services/paciente/cadastrar-paciente.service'
 import { type PacienteRepository } from '../../repositories/paciente.repository'
 import { z } from 'zod'
-import { type IValidator } from '../../application/interfaces/validator.interface'
 
 export class PacientesController {
   constructor (
-    private readonly pacienteRepository: PacienteRepository,
-    private readonly validator: IValidator
+    private readonly pacienteRepository: PacienteRepository
   ) {}
 
   public cadastrar = (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const cadastrarService = new CadastrarPacienteService(this.pacienteRepository, this.validator)
+      const cadastrarService = new CadastrarPacienteService(this.pacienteRepository)
 
       const data = z.object({
         nome: z.string().min(3),

@@ -4,14 +4,12 @@ import { type ConsultaRepository } from '../../repositories/consulta.repository'
 import { type MedicoRepository } from '../../repositories/medico.repository'
 import { type PacienteRepository } from '../../repositories/paciente.repository'
 import { z } from 'zod'
-import { type IValidator } from '../../application/interfaces/validator.interface'
 
 export class ConsultasController {
   constructor (
     private readonly consultaRepository: ConsultaRepository,
     private readonly medicoRepository: MedicoRepository,
-    private readonly pacienteRepository: PacienteRepository,
-    private readonly validator: IValidator
+    private readonly pacienteRepository: PacienteRepository
   ) {}
 
   public agendar = (req: Request, res: Response, next: NextFunction): void => {
@@ -19,8 +17,7 @@ export class ConsultasController {
       const agendarService = new AgendarConsultaService(
         this.consultaRepository,
         this.medicoRepository,
-        this.pacienteRepository,
-        this.validator
+        this.pacienteRepository
       )
 
       const data = z.object({
