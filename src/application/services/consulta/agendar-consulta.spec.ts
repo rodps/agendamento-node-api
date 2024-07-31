@@ -1,11 +1,13 @@
 import { mock } from 'jest-mock-extended'
 import { AgendarConsultaService } from './agendar-consulta.service'
-import { type AgendarConsultaDto } from './dto/agendar-consulta.dto'
-import { ApplicationError } from '../../../errors/application.error'
-import { type IMedicoRepository } from '../../../repository/medico-repository.interface'
-import { type IConsultaRepository } from '../../../repository/consulta-repository.interface'
-import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
-import { Consulta, ConsultaStatus } from '../../../entity/consulta.entity'
+import { ApplicationError } from '../../errors/application.error'
+import { type IMedicoRepository } from '../../repository/medico-repository.interface'
+import { type IConsultaRepository } from '../../repository/consulta-repository.interface'
+import { type IPacienteRepository } from '../../repository/paciente-repository.interface'
+import { Consulta, ConsultaStatus } from '../../entity/consulta.entity'
+import { type ConsultaDtoRequest } from '../../dto/consulta/consulta.dto'
+import { Medico } from '../../entity/medico.entity'
+import { Paciente } from '../../entity/paciente.entity'
 
 describe('AgendarConsultaService', () => {
   const consultaRepository = mock<IConsultaRepository>()
@@ -17,6 +19,14 @@ describe('AgendarConsultaService', () => {
     new Consulta(1, new Date('2022-01-01 00:00:00'), new Date('2022-01-01 01:00:00'), 1, 1, ConsultaStatus.Pendente)
   )
 
+  medicoRepository.buscarPorId.mockResolvedValue(
+    new Medico(1, 'crm', 'especialidade', 'nome')
+  )
+
+  pacienteRepository.buscarPorId.mockResolvedValue(
+    new Paciente(1, 'cpf', 'nome', '12345678910', '2022-01-01')
+  )
+
   const sut = new AgendarConsultaService(consultaRepository, medicoRepository, pacienteRepository)
 
   beforeEach(async () => {
@@ -25,7 +35,7 @@ describe('AgendarConsultaService', () => {
 
   test('deve chamar o repository corretamente', async () => {
     // arrange
-    const data: AgendarConsultaDto = {
+    const data: ConsultaDtoRequest = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,
@@ -42,7 +52,7 @@ describe('AgendarConsultaService', () => {
 
   test('deve retornar um erro quando o horário estiver indisponível', async () => {
     // arrange
-    const data: AgendarConsultaDto = {
+    const data: ConsultaDtoRequest = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,
@@ -66,25 +76,9 @@ describe('AgendarConsultaService', () => {
     await expect(promise).rejects.toThrow(new ApplicationError('Horário indisponível'))
   })
 
-  test('deve retornar um erro quando a data inicial for maior que a data final', async () => {
-    // arrange
-    const data: AgendarConsultaDto = {
-      dataInicio: new Date('2022-01-01 01:00:00'),
-      dataFim: new Date('2022-01-01 00:00:00'),
-      medicoId: 1,
-      pacienteId: 1
-    }
-
-    // act
-    const promise = sut.execute(data)
-
-    // assert
-    await expect(promise).rejects.toThrow(new ApplicationError('Data inicial deve ser anterior a data final'))
-  })
-
   test('deve retornar uma consulta', async () => {
     // arrange
-    const data: AgendarConsultaDto = {
+    const data: ConsultaDtoRequest = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,

@@ -1,8 +1,8 @@
 import { mock } from 'jest-mock-extended'
 import { CadastrarPacienteService } from './cadastrar-paciente.service'
-import { ApplicationError } from '../../../errors/application.error'
-import { type IPacienteRepository } from '../../../repository/paciente-repository.interface'
-import { Paciente } from '../../../entity/paciente.entity'
+import { ApplicationError } from '../../errors/application.error'
+import { type IPacienteRepository } from '../../repository/paciente-repository.interface'
+import { Paciente } from '../../entity/paciente.entity'
 
 describe('Cadastrar Paciente', () => {
   const pacienteRepository = mock<IPacienteRepository>()

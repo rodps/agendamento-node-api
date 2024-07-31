@@ -1,8 +1,8 @@
 import { mock } from 'jest-mock-extended'
-import { ApplicationError } from '../../../errors/application.error'
+import { ApplicationError } from '../../errors/application.error'
 import { CadastrarMedicoService } from './cadastrar-medico.service'
-import { type IMedicoRepository } from '../../../repository/medico-repository.interface'
-import { Medico } from '../../../entity/medico.entity'
+import { type IMedicoRepository } from '../../repository/medico-repository.interface'
+import { Medico } from '../../entity/medico.entity'
 
 describe('CadastrarMedicoService', () => {
   const medicoRepository = mock<IMedicoRepository>()

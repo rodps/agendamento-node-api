@@ -1,3 +1,4 @@
+import { type PacienteDtoRequest } from '../dto/paciente/paciente.dto'
 import { ApplicationEntity } from './_application.entity'
 
 export class Paciente extends ApplicationEntity {
@@ -21,5 +22,15 @@ export class Paciente extends ApplicationEntity {
     if (this.dataNascimento === undefined || this.dataNascimento.length === 0) {
       throw new Error('Data de nascimento obrigatorio')
     }
+  }
+
+  static from (dto: PacienteDtoRequest): Paciente {
+    return new Paciente(
+      null,
+      dto.nome,
+      dto.telefone,
+      dto.cpf,
+      dto.dataNascimento
+    )
   }
 }

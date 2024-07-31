@@ -1,5 +1,4 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import { type CadastrarMedicoDto } from '../application/services/medico/cadastrar/dto/cadastrar-medico.dto'
 import db from '../db'
 import { type IMedicoRepository } from '../application/repository/medico-repository.interface'
 import { Medico } from '../application/entity/medico.entity'
@@ -7,7 +6,7 @@ import { Medico } from '../application/entity/medico.entity'
 interface MedicoRowDataPacket extends Medico, RowDataPacket {}
 
 export class MedicoRepository implements IMedicoRepository {
-  async insert (medico: CadastrarMedicoDto): Promise<Medico> {
+  async insert (medico: Medico): Promise<Medico> {
     const [result] = await db.query<ResultSetHeader>(
       'INSERT into medicos (nome, crm, especialidade) VALUES (?, ?, ?)',
       [medico.nome, medico.crm, medico.especialidade]

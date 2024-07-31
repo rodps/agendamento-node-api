@@ -1,6 +1,15 @@
-import { type Paciente } from '../../../../entity/paciente.entity'
+import { type Paciente } from '../../entity/paciente.entity'
 
-export class CadastrarPacienteResponseDto {
+export class PacienteDtoRequest {
+  constructor (
+    readonly nome: string,
+    readonly telefone: string,
+    readonly cpf: string,
+    readonly dataNascimento: string
+  ) {}
+}
+
+export class PacienteDtoResponse {
   readonly id: number
   readonly nome: string
   readonly telefone: string

@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { AgendarConsultaService } from '../../application/services/consulta/agendar/agendar-consulta.service'
+import { AgendarConsultaService } from '../../application/services/consulta/agendar-consulta.service'
 import { type ConsultaRepository } from '../../repositories/consulta.repository'
 import { type MedicoRepository } from '../../repositories/medico.repository'
 import { type PacienteRepository } from '../../repositories/paciente.repository'

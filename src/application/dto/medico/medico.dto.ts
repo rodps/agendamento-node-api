@@ -1,6 +1,14 @@
-import { type Medico } from '../../../../entity/medico.entity'
+import { type Medico } from '../../entity/medico.entity'
 
-export class CadastrarMedicoResponseDto {
+export class MedicoDtoRequest {
+  constructor (
+    readonly nome: string,
+    readonly crm: string,
+    readonly especialidade: string
+  ) {}
+}
+
+export class MedicoDtoResponse {
   readonly id: number
   readonly nome: string
   readonly crm: string

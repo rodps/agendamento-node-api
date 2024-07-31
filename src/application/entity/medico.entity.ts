@@ -1,3 +1,4 @@
+import { type MedicoDtoRequest } from '../dto/medico/medico.dto'
 import { ApplicationEntity } from './_application.entity'
 
 export class Medico extends ApplicationEntity {
@@ -17,5 +18,9 @@ export class Medico extends ApplicationEntity {
     if (this.especialidade === undefined || this.especialidade.length === 0) {
       throw new Error('Especialidade obrigatorio')
     }
+  }
+
+  static from (dto: MedicoDtoRequest): Medico {
+    return new Medico(null, dto.nome, dto.crm, dto.especialidade)
   }
 }

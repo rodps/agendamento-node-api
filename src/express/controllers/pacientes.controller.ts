@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { CadastrarPacienteService } from '../../application/services/paciente/cadastrar/cadastrar-paciente.service'
+import { CadastrarPacienteService } from '../../application/services/paciente/cadastrar-paciente.service'
 import { type PacienteRepository } from '../../repositories/paciente.repository'
 import { z } from 'zod'
 
