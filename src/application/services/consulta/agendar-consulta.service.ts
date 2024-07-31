@@ -1,45 +1,28 @@
 import { ConsultaDtoResponse, type ConsultaDtoRequest } from '../../dto/consulta/consulta.dto'
 import { Consulta } from '../../entity/consulta.entity'
-import { ApplicationError } from '../../errors/application.error'
-import { type IConsultaRepository } from '../../repository/consulta-repository.interface'
-import { type IMedicoRepository } from '../../repository/medico-repository.interface'
-import { type IPacienteRepository } from '../../repository/paciente-repository.interface'
+import { type IConsultaRepository, type IMedicoRepository, type IPacienteRepository } from '../../interfaces/repository.interface'
+import { type IValidator } from '../../interfaces/validator.interface'
 
 export class AgendarConsultaService {
   constructor (
     private readonly consultaRepository: IConsultaRepository,
     private readonly medicoRepository: IMedicoRepository,
-    private readonly pacienteRepository: IPacienteRepository
+    private readonly pacienteRepository: IPacienteRepository,
+    private readonly validator: IValidator
   ) {}
 
   public async execute (dto: ConsultaDtoRequest): Promise<ConsultaDtoResponse> {
-    await this.validarMedicoExiste(dto.medicoId)
-    await this.validarPacienteExiste(dto.pacienteId)
-    await this.validarDisponibilidade(dto.dataInicio, dto.dataFim)
+    const medico = await this.medicoRepository.buscarPorId(dto.medicoId)
+    this.validator.isNotNull(medico, 'medicoId não encontrado')
+
+    const paciente = await this.pacienteRepository.buscarPorId(dto.pacienteId)
+    this.validator.isNotNull(paciente, 'pacienteId não encontrado')
+
+    const consultas = await this.consultaRepository.buscarPorData(dto.dataInicio, dto.dataFim)
+    this.validator.isEmpty(consultas, 'Horário indisponível')
 
     const consulta = await this.consultaRepository.insert(Consulta.from(dto))
 
     return new ConsultaDtoResponse(consulta)
-  }
-
-  private async validarMedicoExiste (medicoId: number): Promise<void> {
-    const medico = await this.medicoRepository.buscarPorId(medicoId)
-    if (medico == null) {
-      throw new ApplicationError('medicoId não encontrado')
-    }
-  }
-
-  private async validarPacienteExiste (pacienteId: number): Promise<void> {
-    const paciente = await this.pacienteRepository.buscarPorId(pacienteId)
-    if (paciente == null) {
-      throw new ApplicationError('pacienteId não encontrado')
-    }
-  }
-
-  private async validarDisponibilidade (dataInicio: Date, dataFim: Date): Promise<void> {
-    const consulta = await this.consultaRepository.buscarPorData(dataInicio, dataFim)
-    if (consulta.length > 0) {
-      throw new ApplicationError('Horário indisponível')
-    }
   }
 }

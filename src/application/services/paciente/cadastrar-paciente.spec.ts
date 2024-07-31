@@ -1,12 +1,14 @@
 import { mock } from 'jest-mock-extended'
 import { CadastrarPacienteService } from './cadastrar-paciente.service'
 import { ApplicationError } from '../../errors/application.error'
-import { type IPacienteRepository } from '../../repository/paciente-repository.interface'
+import { type IPacienteRepository } from '../../interfaces/repository.interface'
 import { Paciente } from '../../entity/paciente.entity'
+import { type IValidator } from '../../interfaces/validator.interface'
 
 describe('Cadastrar Paciente', () => {
   const pacienteRepository = mock<IPacienteRepository>()
-  const sut = new CadastrarPacienteService(pacienteRepository)
+  const validator = mock<IValidator>()
+  const sut = new CadastrarPacienteService(pacienteRepository, validator)
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -48,9 +50,7 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([
-      new Paciente(1, 'nome', '123', '123', '2022-01-01')
-    ])
+    jest.spyOn(validator, 'isEmpty').mockImplementationOnce(() => { throw new ApplicationError('Este CPF já existe') })
 
     // assert
     await expect(sut.execute(dto)).rejects.toThrow(new ApplicationError('Este CPF já existe'))

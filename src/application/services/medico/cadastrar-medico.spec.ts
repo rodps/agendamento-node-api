@@ -1,11 +1,15 @@
 import { mock } from 'jest-mock-extended'
 import { ApplicationError } from '../../errors/application.error'
 import { CadastrarMedicoService } from './cadastrar-medico.service'
-import { type IMedicoRepository } from '../../repository/medico-repository.interface'
+import { type IMedicoRepository } from '../../interfaces/repository.interface'
 import { Medico } from '../../entity/medico.entity'
+import { type IValidator } from '../../interfaces/validator.interface'
 
 describe('CadastrarMedicoService', () => {
   const medicoRepository = mock<IMedicoRepository>()
+  const validator = mock<IValidator>()
+
+  const sut = new CadastrarMedicoService(medicoRepository, validator)
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -13,11 +17,8 @@ describe('CadastrarMedicoService', () => {
 
   test('deve lancar um erro quando o crm ja existir', async () => {
     // arrange
-    jest.spyOn(medicoRepository, 'buscarPorCrm').mockResolvedValueOnce([
-      new Medico(1, '111', 'especialidade', 'nome')
-    ])
+    jest.spyOn(validator, 'isEmpty').mockImplementationOnce(() => { throw new ApplicationError('CRM ja existe') })
 
-    const sut = new CadastrarMedicoService(medicoRepository)
     const dto = {
       crm: '123',
       especialidade: 'especialidade',
@@ -39,7 +40,6 @@ describe('CadastrarMedicoService', () => {
       especialidade: 'especialidade',
       nome: 'nome'
     }
-    const sut = new CadastrarMedicoService(medicoRepository)
 
     // act
     const result = await sut.execute(data)
@@ -62,7 +62,6 @@ describe('CadastrarMedicoService', () => {
       especialidade: 'especialidade',
       nome: 'nome'
     }
-    const sut = new CadastrarMedicoService(medicoRepository)
 
     // act
     await sut.execute(data)

@@ -1,7 +1,7 @@
 import { type RowDataPacket, type ResultSetHeader } from 'mysql2'
 import db from '../db'
-import { type IConsultaRepository } from '../application/repository/consulta-repository.interface'
 import { Consulta } from '../application/entity/consulta.entity'
+import { type IConsultaRepository } from '../application/interfaces/repository.interface'
 
 interface ConsultaRowDataPacket extends RowDataPacket, Consulta {}
 

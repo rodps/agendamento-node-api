@@ -43,7 +43,7 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('CRM ja existe')
+    expect(response.body.erro).toBe('CRM já existe')
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {

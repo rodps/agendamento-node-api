@@ -1,7 +1,7 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
 import db from '../db'
-import { type IMedicoRepository } from '../application/repository/medico-repository.interface'
 import { Medico } from '../application/entity/medico.entity'
+import { type IMedicoRepository } from '../application/interfaces/repository.interface'
 
 interface MedicoRowDataPacket extends Medico, RowDataPacket {}
 

@@ -1,11 +1,10 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import { type CadastrarPacienteDto } from '../application/services/paciente/cadastrar/dto/cadastrar-paciente.dto'
 import db from '../db'
-import { type IPacienteRepository } from '../application/repository/paciente-repository.interface'
 import { Paciente } from '../application/entity/paciente.entity'
+import { type IPacienteRepository } from '../application/interfaces/repository.interface'
 
 export class PacienteRepository implements IPacienteRepository {
-  async insert (paciente: CadastrarPacienteDto): Promise<Paciente> {
+  async insert (paciente: Paciente): Promise<Paciente> {
     const [result] = await db.query<ResultSetHeader>(
       'INSERT INTO pacientes (nome, telefone, cpf, data_nascimento) VALUES (?, ?, ?, ?)',
       [paciente.nome, paciente.telefone, paciente.cpf, paciente.dataNascimento]
