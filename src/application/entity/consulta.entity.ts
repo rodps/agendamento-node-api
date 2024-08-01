@@ -1,5 +1,5 @@
 import { type ConsultaDtoRequest } from '../dto/consulta/consulta.dto'
-import { ApplicationError } from '../errors/application.error'
+import { Validator } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
 export class Consulta extends ApplicationEntity {
@@ -12,24 +12,12 @@ export class Consulta extends ApplicationEntity {
     readonly status: ConsultaStatus
   ) {
     super(id)
-    if (this.dataInicio === undefined) {
-      throw new ApplicationError('Data de inicio obrigatorio')
-    }
-    if (this.dataFim === undefined) {
-      throw new ApplicationError('Data de fim obrigatorio')
-    }
-    if (this.dataInicio > this.dataFim) {
-      throw new ApplicationError('Data inicial deve ser anterior a data final')
-    }
-    if (this.medicoId === undefined || this.medicoId < 0) {
-      throw new ApplicationError('medicoId obrigatorio')
-    }
-    if (this.pacienteId === undefined || this.pacienteId < 0) {
-      throw new ApplicationError('pacienteId obrigatorio')
-    }
-    if (this.status === undefined) {
-      throw new ApplicationError('Status obrigatorio')
-    }
+    Validator.isNotNull(dataInicio, 'Data de inicio obrigatorio')
+    Validator.isNotNull(dataFim, 'Data de fim obrigatorio')
+    Validator.isNotNull(medicoId, 'medicoId obrigatorio')
+    Validator.isNotNull(pacienteId, 'pacienteId obrigatorio')
+    Validator.isNotNull(status, 'Status obrigatorio')
+    Validator.isGreaterThan(dataFim, dataInicio, 'Data inicial deve ser anterior a data final')
   }
 
   static from (dto: ConsultaDtoRequest): Consulta {

@@ -1,4 +1,5 @@
 import { type PacienteDtoRequest } from '../dto/paciente/paciente.dto'
+import { Validator } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
 export class Paciente extends ApplicationEntity {
@@ -10,18 +11,10 @@ export class Paciente extends ApplicationEntity {
     readonly dataNascimento: string
   ) {
     super(id)
-    if (this.nome === undefined || this.nome.length === 0) {
-      throw new Error('Nome obrigatorio')
-    }
-    if (this.telefone === undefined || this.telefone.length === 0) {
-      throw new Error('Telefone obrigatorio')
-    }
-    if (this.cpf === undefined || this.cpf.length === 0) {
-      throw new Error('CPF obrigatorio')
-    }
-    if (this.dataNascimento === undefined || this.dataNascimento.length === 0) {
-      throw new Error('Data de nascimento obrigatorio')
-    }
+    Validator.isNotEmpty(nome, 'Nome obrigatorio')
+    Validator.isNotEmpty(telefone, 'Telefone obrigatorio')
+    Validator.isNotEmpty(cpf, 'CPF obrigatorio')
+    Validator.isNotEmpty(dataNascimento, 'Data de nascimento obrigatorio')
   }
 
   static from (dto: PacienteDtoRequest): Paciente {
