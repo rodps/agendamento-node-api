@@ -1,12 +1,12 @@
 import { mock } from 'jest-mock-extended'
-import { CadastrarPacienteService } from './cadastrar-paciente.service'
-import { ApplicationError } from '../../errors/application.error'
-import { type IPacienteRepository } from '../../interfaces/repository.interface'
-import { Paciente } from '../../entity/paciente.entity'
+import { type IPacienteRepository } from '../../../../src/application/interfaces/repository.interface'
+import { PacienteService } from '../../../../src/application/services/paciente.service'
+import { Paciente } from '../../../../src/application/entity/paciente.entity'
+import { ApplicationError } from '../../../../src/application/errors/application.error'
 
 describe('Cadastrar Paciente', () => {
   const pacienteRepository = mock<IPacienteRepository>()
-  const sut = new CadastrarPacienteService(pacienteRepository)
+  const sut = new PacienteService(pacienteRepository)
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -21,13 +21,15 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce(
-      new Paciente(1, 'nome', '123', '123', '2022-01-01')
-    )
+    jest
+      .spyOn(pacienteRepository, 'insert')
+      .mockResolvedValueOnce(
+        new Paciente(1, 'nome', '123', '123', '2022-01-01')
+      )
     jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([])
 
     // act
-    const response = await sut.execute(dto)
+    const response = await sut.cadastrar(dto)
 
     // assert
     expect(response).toEqual({
@@ -48,12 +50,16 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([
-      new Paciente(1, 'nome', '123', '123', '2022-01-01')
-    ])
+    jest
+      .spyOn(pacienteRepository, 'buscarPorCpf')
+      .mockResolvedValueOnce([
+        new Paciente(1, 'nome', '123', '123', '2022-01-01')
+      ])
 
     // assert
-    await expect(sut.execute(dto)).rejects.toThrow(new ApplicationError('CPF já existe'))
+    await expect(sut.cadastrar(dto)).rejects.toThrow(
+      new ApplicationError('CPF já existe')
+    )
   })
 
   test('deve chamar o repository corretamente', async () => {
@@ -65,16 +71,20 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     }
 
-    jest.spyOn(pacienteRepository, 'insert').mockResolvedValueOnce(
-      new Paciente(1, 'nome', '123', '123', '2022-01-01')
-    )
+    jest
+      .spyOn(pacienteRepository, 'insert')
+      .mockResolvedValueOnce(
+        new Paciente(1, 'nome', '123', '123', '2022-01-01')
+      )
     jest.spyOn(pacienteRepository, 'buscarPorCpf').mockResolvedValueOnce([])
 
     // act
-    await sut.execute(dto)
+    await sut.cadastrar(dto)
 
     // assert
     expect(pacienteRepository.insert).toHaveBeenCalledTimes(1)
-    expect(pacienteRepository.insert).toHaveBeenCalledWith(new Paciente(null, 'nome', '123', '123', '2022-01-01'))
+    expect(pacienteRepository.insert).toHaveBeenCalledWith(
+      new Paciente(null, 'nome', '123', '123', '2022-01-01')
+    )
   })
 })

@@ -1,16 +1,23 @@
-import { ConsultaDtoResponse, type ConsultaDtoRequest } from '../../dto/consulta/consulta.dto'
-import { Consulta } from '../../entity/consulta.entity'
-import { type IConsultaRepository, type IMedicoRepository, type IPacienteRepository } from '../../interfaces/repository.interface'
-import { Validator } from '../../utils/validator'
+import {
+  ConsultaDtoResponse,
+  type ConsultaDtoRequest
+} from '../dto/consulta/consulta.dto'
+import { Consulta } from '../entity/consulta.entity'
+import {
+  type IConsultaRepository,
+  type IMedicoRepository,
+  type IPacienteRepository
+} from '../interfaces/repository.interface'
+import { Validator } from '../utils/validator'
 
-export class AgendarConsultaService {
+export class ConsultaService {
   constructor (
     private readonly consultaRepository: IConsultaRepository,
     private readonly medicoRepository: IMedicoRepository,
     private readonly pacienteRepository: IPacienteRepository
   ) {}
 
-  public async execute (dto: ConsultaDtoRequest): Promise<ConsultaDtoResponse> {
+  public async agendar (dto: ConsultaDtoRequest): Promise<ConsultaDtoResponse> {
     const medico = await this.medicoRepository.buscarPorId(dto.medicoId)
     Validator.isNotNull(medico, 'medicoId não encontrado')
 
