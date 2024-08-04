@@ -1,5 +1,5 @@
 import { type ConsultaDtoRequest } from '../dto/consulta/consulta.dto'
-import { Validator } from '../utils/validator'
+import { isGreaterThan, isNotNull } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
 export class Consulta extends ApplicationEntity {
@@ -12,12 +12,12 @@ export class Consulta extends ApplicationEntity {
     readonly status: ConsultaStatus
   ) {
     super(id)
-    Validator.isNotNull(dataInicio, 'Data de inicio obrigatorio')
-    Validator.isNotNull(dataFim, 'Data de fim obrigatorio')
-    Validator.isNotNull(medicoId, 'medicoId obrigatorio')
-    Validator.isNotNull(pacienteId, 'pacienteId obrigatorio')
-    Validator.isNotNull(status, 'Status obrigatorio')
-    Validator.isGreaterThan(dataFim, dataInicio, 'Data inicial deve ser anterior a data final')
+    isNotNull(dataInicio, 'Data de inicio obrigatorio')
+    isNotNull(dataFim, 'Data de fim obrigatorio')
+    isNotNull(medicoId, 'medicoId obrigatorio')
+    isNotNull(pacienteId, 'pacienteId obrigatorio')
+    isNotNull(status, 'Status obrigatorio')
+    isGreaterThan(dataFim, dataInicio, 'Data inicial deve ser anterior a data final')
   }
 
   static from (dto: ConsultaDtoRequest): Consulta {

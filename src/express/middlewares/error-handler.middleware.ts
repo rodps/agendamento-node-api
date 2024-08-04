@@ -17,7 +17,6 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
     }))
     res.status(400).json({ erro: errors })
   } else {
-    console.log(err)
     res.status(500).json({ erro: 'Internal server error', type: 'INTERNAL_SERVER_ERROR' })
   }
 }

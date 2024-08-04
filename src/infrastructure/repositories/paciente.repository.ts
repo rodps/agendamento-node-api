@@ -1,7 +1,7 @@
 import { type ResultSetHeader, type RowDataPacket } from 'mysql2'
-import db from '../db'
-import { Paciente } from '../application/entity/paciente.entity'
-import { type IPacienteRepository } from '../application/interfaces/repository.interface'
+import db from '../../db'
+import { Paciente } from '../../application/entity/paciente.entity'
+import { type IPacienteRepository } from '../../application/interfaces/repository.interface'
 
 export class PacienteRepository implements IPacienteRepository {
   async insert (paciente: Paciente): Promise<Paciente> {

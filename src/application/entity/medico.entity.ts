@@ -1,5 +1,5 @@
 import { type MedicoDtoRequest } from '../dto/medico/medico.dto'
-import { Validator } from '../utils/validator'
+import { isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
 export class Medico extends ApplicationEntity {
@@ -10,9 +10,9 @@ export class Medico extends ApplicationEntity {
     readonly especialidade: string
   ) {
     super(id)
-    Validator.isNotEmpty(nome, 'Nome obrigatorio')
-    Validator.isNotEmpty(crm, 'CRM obrigatorio')
-    Validator.isNotEmpty(especialidade, 'Especialidade obrigatorio')
+    isNotEmpty(nome, 'Nome obrigatorio')
+    isNotEmpty(crm, 'CRM obrigatorio')
+    isNotEmpty(especialidade, 'Especialidade obrigatorio')
   }
 
   static from (dto: MedicoDtoRequest): Medico {

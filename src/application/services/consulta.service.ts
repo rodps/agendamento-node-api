@@ -8,7 +8,7 @@ import {
   type IMedicoRepository,
   type IPacienteRepository
 } from '../interfaces/repository.interface'
-import { Validator } from '../utils/validator'
+import { isEmpty, isNotNull } from '../utils/validator'
 
 export class ConsultaService {
   constructor (
@@ -19,13 +19,13 @@ export class ConsultaService {
 
   public async agendar (dto: ConsultaDtoRequest): Promise<ConsultaDtoResponse> {
     const medico = await this.medicoRepository.buscarPorId(dto.medicoId)
-    Validator.isNotNull(medico, 'medicoId não encontrado')
+    isNotNull(medico, 'medicoId não encontrado')
 
     const paciente = await this.pacienteRepository.buscarPorId(dto.pacienteId)
-    Validator.isNotNull(paciente, 'pacienteId não encontrado')
+    isNotNull(paciente, 'pacienteId não encontrado')
 
     const consultas = await this.consultaRepository.buscarPorData(dto.dataInicio, dto.dataFim)
-    Validator.isEmpty(consultas, 'Horário indisponível')
+    isEmpty(consultas, 'Horário indisponível')
 
     const consulta = await this.consultaRepository.insert(Consulta.from(dto))
 

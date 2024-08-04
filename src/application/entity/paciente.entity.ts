@@ -1,5 +1,5 @@
 import { type PacienteDtoRequest } from '../dto/paciente/paciente.dto'
-import { Validator } from '../utils/validator'
+import { isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
 export class Paciente extends ApplicationEntity {
@@ -11,10 +11,10 @@ export class Paciente extends ApplicationEntity {
     readonly dataNascimento: string
   ) {
     super(id)
-    Validator.isNotEmpty(nome, 'Nome obrigatorio')
-    Validator.isNotEmpty(telefone, 'Telefone obrigatorio')
-    Validator.isNotEmpty(cpf, 'CPF obrigatorio')
-    Validator.isNotEmpty(dataNascimento, 'Data de nascimento obrigatorio')
+    isNotEmpty(nome, 'Nome obrigatorio')
+    isNotEmpty(telefone, 'Telefone obrigatorio')
+    isNotEmpty(cpf, 'CPF obrigatorio')
+    isNotEmpty(dataNascimento, 'Data de nascimento obrigatorio')
   }
 
   static from (dto: PacienteDtoRequest): Paciente {
