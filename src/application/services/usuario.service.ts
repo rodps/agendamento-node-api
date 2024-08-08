@@ -22,4 +22,9 @@ export class UsuarioService {
     const result = await this.usuarioRepository.insert(user)
     return UsuarioDtoResponse.fromEntity(result)
   }
+
+  public async buscarPorEmail (email: string): Promise<Usuario | null> {
+    const usuario = await this.usuarioRepository.buscarPorEmail(email)
+    return usuario
+  }
 }

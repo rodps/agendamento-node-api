@@ -5,6 +5,7 @@ import { ConsultaRepository } from '../../infrastructure/repositories/consulta.r
 import { MedicoRepository } from '../../infrastructure/repositories/medico.repository'
 import { PacienteRepository } from '../../infrastructure/repositories/paciente.repository'
 import { ConsultaService } from '../../application/services/consulta.service'
+import { auth } from '../middlewares/authentication.middleware'
 
 const consultasRouter = Router()
 
@@ -15,6 +16,6 @@ const consultaService = new ConsultaService(
 )
 const controller = new ConsultasController(consultaService)
 
-consultasRouter.post('/consultas', controller.agendar)
+consultasRouter.post('/consultas', auth, controller.agendar)
 
 export { consultasRouter }

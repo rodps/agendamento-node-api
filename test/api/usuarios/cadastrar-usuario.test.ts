@@ -19,8 +19,6 @@ describe('Cadastrar Usuário', () => {
     }
     const response = await request(app).post('/usuarios').send(data)
 
-    console.log(response.body)
-
     expect(response.status).toBe(201)
     expect(response.body.id).toBeDefined()
     expect(response.body.nome).toBe(data.nome)

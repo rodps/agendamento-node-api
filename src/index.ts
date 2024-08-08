@@ -1,5 +1,6 @@
+import { appConfig } from './app-config'
 import app from './express/app'
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000')
+app.listen(appConfig.port, () => {
+  console.log(`Servidor iniciado na porta ${appConfig.port}`)
 })

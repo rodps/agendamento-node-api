@@ -1,10 +1,6 @@
-import fs from 'fs'
 import db from './index'
 import { type RowDataPacket } from 'mysql2'
-import { glob } from 'glob'
-import path from 'path'
-
-const dirname = path.join(__dirname, 'migrations')
+import { migrations } from './migrations'
 
 async function initMigrationDatabase (): Promise<void> {
   await db.query(`CREATE TABLE IF NOT EXISTS migrations(
@@ -31,50 +27,56 @@ async function insertMigration (name: string, version: number): Promise<void> {
   }
 }
 
-async function runMigration (version: number): Promise<void> {
-  const globPattern = `${dirname}/v${version}-*.sql`
-  const files = glob.sync(globPattern)
-
-  if (files.length === 0) {
+async function upMigration (version: number): Promise<void> {
+  const migration = migrations.find(m => m.version === version)
+  if (migration == null) {
     throw new Error('Migration v' + version + ' não encontrada')
   }
-
-  if (files.length > 1) {
-    throw new Error('Mais de uma migration v' + version + ' encontrada')
-  }
-
-  const path = files[0]
-  console.log(`Executando migration v${version}: ${path}`)
-  const content = fs.readFileSync(path, 'utf-8')
-  await db.query(content)
-  await insertMigration(path, version)
+  console.log(`Executando migration v${version}: ${migration.name}`)
+  await migration.up()
+  await insertMigration(migration.name, version)
   console.log(`Migration v${version} concluída`)
 }
 
-async function runMigrations (): Promise<void> {
+async function downMigration (version: number): Promise<void> {
+  const migration = migrations.find((m) => m.version === version)
+  if (migration == null) {
+    throw new Error('Migration v' + version + ' não encontrada')
+  }
+  console.log(`Executando migration v${version}: ${migration.name}`)
+  await migration.down()
+  console.log(`Migration v${version} concluída`)
+}
+
+async function resetMigrations (): Promise<void> {
+  await closeConnection()
+  await db.query('DROP TABLE IF EXISTS migrations')
+  const migrationCount = migrations.length
+  console.log(`Total de migrations encontradas: ${migrationCount}`)
+  for (let i: number = migrationCount - 1; i >= 0; i--) {
+    await downMigration(i + 1)
+    console.log(`Migrations excluídas: ${migrationCount - i}/${migrationCount}`)
+  }
+}
+
+export async function runMigrations (reset = false): Promise<void> {
+  if (reset) {
+    await resetMigrations()
+  }
   await initMigrationDatabase()
   const latestVersion = await getLatestVersion()
   console.log(`Versão atual: ${latestVersion}`)
-  console.log('Diretório de migrations: ' + dirname)
-  const migrationCount = fs.readdirSync(dirname).length
+  const migrationCount = migrations.length
   console.log(`Total de migrations encontradas: ${migrationCount}`)
-
-  if (latestVersion >= migrationCount) {
-    console.log('Nenhuma migration a ser executada.')
-    await closeConnection()
-    return
-  }
-
   for (let i: number = latestVersion; i < migrationCount; i++) {
-    await runMigration(i + 1)
+    await upMigration(i + 1)
     console.log(`Migrations concluídas: ${i + 1}/${migrationCount}`)
   }
   await closeConnection()
-  console.log('Fim')
 }
 
 async function closeConnection (): Promise<void> {
   (await db.getConnection()).destroy()
 }
 
-void runMigrations()
+void runMigrations(true)

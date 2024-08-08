@@ -1,27 +1,69 @@
 import request from 'supertest'
 import app from '../../../src/express/app'
-import { closeDbConnection, deleteAllFromTable } from '../../helpers'
-import { seedMedicos } from '../../../src/db/seeders/medicos.seeder'
-import { seedPacientes } from '../../../src/db/seeders/pacientes.seeder'
+import { closeDbConnection, deleteAllFromTable, getAuthToken } from '../../helpers'
+import { ConsultaRepository } from '../../../src/infrastructure/repositories/consulta.repository'
+import { Consulta, ConsultaStatus } from '../../../src/application/entity/consulta.entity'
+import { UsuarioRepository } from '../../../src/infrastructure/repositories/usuario.repository'
+import { EncryptionService } from '../../../src/infrastructure/services/encryption.service'
+import { JwtService } from '../../../src/infrastructure/services/jwt.service'
+import { AuthService } from '../../../src/application/services/auth.service'
+import { MedicoRepository } from '../../../src/infrastructure/repositories/medico.repository'
+import { PacienteRepository } from '../../../src/infrastructure/repositories/paciente.repository'
+import { Medico } from '../../../src/application/entity/medico.entity'
+import { Paciente } from '../../../src/application/entity/paciente.entity'
+import { UsuarioService } from '../../../src/application/services/usuario.service'
+
+const createTestData = async (
+  medicoRepository: MedicoRepository,
+  pacienteRepository: PacienteRepository,
+  consultaRepository: ConsultaRepository
+): Promise<void> => {
+  await deleteAllFromTable('consultas')
+  await deleteAllFromTable('medicos')
+  await deleteAllFromTable('pacientes')
+
+  await medicoRepository.insert(
+    new Medico(null, 'nome', '111', 'especialidade')
+  )
+  await pacienteRepository.insert(
+    new Paciente(null, 'nome', 'telefone', 'cpf', '2022-01-01')
+  )
+  await consultaRepository.insert(
+    new Consulta(
+      null,
+      new Date('2022-01-01T00:00:00.000Z'),
+      new Date('2022-01-01T01:00:00.000Z'),
+      1,
+      1,
+      ConsultaStatus.Pendente
+    )
+  )
+}
 
 describe('Agendar Consulta', () => {
+  const consultaRepository = new ConsultaRepository()
+  const medicoRepository = new MedicoRepository()
+  const pacienteRepository = new PacienteRepository()
+  const encryptionService = new EncryptionService()
+  const usuarioRepository = new UsuarioRepository()
+  const jwtService = new JwtService()
+  const authService = new AuthService(encryptionService, usuarioRepository, jwtService)
+  const usuarioService = new UsuarioService(usuarioRepository, encryptionService)
+
+  let token = ''
+
   afterAll(async () => {
-    await deleteAllFromTable('consultas')
     await closeDbConnection()
   })
 
-  beforeAll(async () => {
-    await deleteAllFromTable('medicos')
-    await deleteAllFromTable('pacientes')
-    await seedMedicos()
-    await seedPacientes()
-  })
-
   beforeEach(async () => {
-    await deleteAllFromTable('consultas')
+    await createTestData(medicoRepository, pacienteRepository, consultaRepository)
+    if (token === '') {
+      token = await getAuthToken(authService, usuarioService)
+    }
   })
 
-  test('deve retornar 201', async () => {
+  test('deve retornar 401 quando o usuario não estiver autenticado', async () => {
     const result = await request(app).post('/consultas').send({
       dataInicio: '2022-01-01T00:00:00.000Z',
       dataFim: '2022-01-01T01:00:00.000Z',
@@ -29,10 +71,21 @@ describe('Agendar Consulta', () => {
       pacienteId: 1
     })
 
+    expect(result.status).toBe(401)
+  })
+
+  test('deve retornar 201', async () => {
+    const result = await request(app).post('/consultas').send({
+      dataInicio: '2022-01-03T00:00:00.000Z',
+      dataFim: '2022-01-03T01:00:00.000Z',
+      medicoId: 1,
+      pacienteId: 1
+    }).auth(token, { type: 'bearer' })
+
     expect(result.status).toBe(201)
     expect(result.body.id).toBeDefined()
-    expect(result.body.dataInicio).toBe('2022-01-01T00:00:00.000Z')
-    expect(result.body.dataFim).toBe('2022-01-01T01:00:00.000Z')
+    expect(result.body.dataInicio).toBe('2022-01-03T00:00:00.000Z')
+    expect(result.body.dataFim).toBe('2022-01-03T01:00:00.000Z')
     expect(result.body.medicoId).toBe(1)
     expect(result.body.pacienteId).toBe(1)
     expect(result.body.status).toBe('PENDENTE')
@@ -44,7 +97,7 @@ describe('Agendar Consulta', () => {
       dataFim: '2022-01-01T01:00:00.000Z',
       medicoId: 999,
       pacienteId: 999
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBe('medicoId não encontrado')
@@ -56,7 +109,7 @@ describe('Agendar Consulta', () => {
       dataFim: '2022-01-01T01:00:00.000Z',
       medicoId: 1,
       pacienteId: 999
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBe('pacienteId não encontrado')
@@ -67,7 +120,7 @@ describe('Agendar Consulta', () => {
       dataFim: '2022-01-01T01:00:00.000Z',
       medicoId: 1,
       pacienteId: 1
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBeDefined()
@@ -79,7 +132,7 @@ describe('Agendar Consulta', () => {
       dataInicio: '2022-01-01T00:00:00.000Z',
       medicoId: 1,
       pacienteId: 1
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBeDefined()
@@ -92,7 +145,7 @@ describe('Agendar Consulta', () => {
       dataFim: '2022-01-01T00:00:00.000Z',
       medicoId: 1,
       pacienteId: 1
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBe(
@@ -101,19 +154,12 @@ describe('Agendar Consulta', () => {
   })
 
   test('deve retornar 400 quando o horário estiver indisponível', async () => {
-    await request(app).post('/consultas').send({
-      dataInicio: '2022-01-01T00:00:00.000Z',
-      dataFim: '2022-01-01T01:00:00.000Z',
-      medicoId: 1,
-      pacienteId: 1
-    })
-
     const result = await request(app).post('/consultas').send({
       dataInicio: '2022-01-01T00:00:00.000Z',
       dataFim: '2022-01-01T01:00:00.000Z',
       medicoId: 1,
       pacienteId: 1
-    })
+    }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
     expect(result.body.erro).toBe('Horário indisponível')
