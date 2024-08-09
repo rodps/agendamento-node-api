@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
 import { MedicosFactory } from '../factories/medicos.factory'
 
