@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
-import { type IJwtPayload } from '../types'
 import { type Usuario } from '../../application/entity/usuario.entity'
 import { ApplicationError } from '../../application/errors/application.error'
 import { appConfig } from '../../app-config'
+import { type IJwtService, type IJwtPayload } from '../../application/interfaces/jwt-service.interface'
 
-export class JwtService {
+export class JwtService implements IJwtService {
   public generateToken (user: Usuario): string {
     return jwt.sign({
       sub: user.id,

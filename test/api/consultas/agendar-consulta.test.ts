@@ -1,23 +1,17 @@
 import request from 'supertest'
 import app from '../../../src/express/app'
 import { closeDbConnection, deleteAllFromTable, getAuthToken } from '../../helpers'
-import { ConsultaRepository } from '../../../src/infrastructure/repositories/consulta.repository'
 import { Consulta, ConsultaStatus } from '../../../src/application/entity/consulta.entity'
-import { UsuarioRepository } from '../../../src/infrastructure/repositories/usuario.repository'
-import { EncryptionService } from '../../../src/infrastructure/services/encryption.service'
-import { JwtService } from '../../../src/infrastructure/services/jwt.service'
-import { AuthService } from '../../../src/application/services/auth.service'
-import { MedicoRepository } from '../../../src/infrastructure/repositories/medico.repository'
-import { PacienteRepository } from '../../../src/infrastructure/repositories/paciente.repository'
 import { Medico } from '../../../src/application/entity/medico.entity'
 import { Paciente } from '../../../src/application/entity/paciente.entity'
-import { UsuarioService } from '../../../src/application/services/usuario.service'
+import { ConsultasFactory } from '../../../src/express/factories/consultas.factory'
 
-const createTestData = async (
-  medicoRepository: MedicoRepository,
-  pacienteRepository: PacienteRepository,
-  consultaRepository: ConsultaRepository
-): Promise<void> => {
+const createTestData = async (): Promise<void> => {
+  const factory = new ConsultasFactory()
+  const medicoRepository = factory.createMedicoRepository()
+  const pacienteRepository = factory.createPacienteRepository()
+  const consultaRepository = factory.createConsultaRepository()
+
   await deleteAllFromTable('consultas')
   await deleteAllFromTable('medicos')
   await deleteAllFromTable('pacientes')
@@ -41,15 +35,6 @@ const createTestData = async (
 }
 
 describe('Agendar Consulta', () => {
-  const consultaRepository = new ConsultaRepository()
-  const medicoRepository = new MedicoRepository()
-  const pacienteRepository = new PacienteRepository()
-  const encryptionService = new EncryptionService()
-  const usuarioRepository = new UsuarioRepository()
-  const jwtService = new JwtService()
-  const authService = new AuthService(encryptionService, usuarioRepository, jwtService)
-  const usuarioService = new UsuarioService(usuarioRepository, encryptionService)
-
   let token = ''
 
   afterAll(async () => {
@@ -57,9 +42,9 @@ describe('Agendar Consulta', () => {
   })
 
   beforeEach(async () => {
-    await createTestData(medicoRepository, pacienteRepository, consultaRepository)
+    await createTestData()
     if (token === '') {
-      token = await getAuthToken(authService, usuarioService)
+      token = await getAuthToken()
     }
   })
 

@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { ApplicationError } from '../../application/errors/application.error'
-import { JwtService } from '../../infrastructure/services/jwt.service'
+import { AuthFactory } from '../factories/auth.factory'
 
 export const auth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.headers.authorization == null) {
@@ -13,7 +13,7 @@ export const auth = (req: Request, res: Response, next: NextFunction): void => {
     throw new ApplicationError('Unauthorized', 401)
   }
 
-  const jwtService = new JwtService()
+  const jwtService = new AuthFactory().createJwtService()
   const payload = jwtService.decodeToken(token)
 
   req.user = {

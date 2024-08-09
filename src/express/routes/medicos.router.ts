@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { MedicoRepository } from '../../infrastructure/repositories/medico.repository'
-import { MedicosController } from '../controllers/medicos.controller'
-import { MedicoService } from '../../application/services/medico.service'
+import { MedicosFactory } from '../factories/medicos.factory'
 
 const medicosRouter = Router()
-const medicoService = new MedicoService(new MedicoRepository())
-const controller = new MedicosController(medicoService)
+const controller = new MedicosFactory().createMedicosController()
 
 medicosRouter.post('/medicos', controller.cadastrar)
 

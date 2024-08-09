@@ -1,7 +1,7 @@
 import db from '../src/db'
-import { type AuthService } from '../src/application/services/auth.service'
-import { type UsuarioService } from '../src/application/services/usuario.service'
 import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
+import { AuthFactory } from '../src/express/factories/auth.factory'
+import { UsuariosFactory } from '../src/express/factories/usuarios.factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -20,8 +20,11 @@ export const closeDbConnection = async (): Promise<void> => {
   await db.end()
 }
 
-export const getAuthToken = async (authService: AuthService, usuarioService: UsuarioService): Promise<string> => {
+export const getAuthToken = async (): Promise<string> => {
   isTestEnv()
+  const authService = new AuthFactory().createAuthService()
+  const usuarioService = new UsuariosFactory().createUsuarioService()
+
   const usuario = await usuarioService.buscarPorEmail('testuser_123@test.com')
   if (usuario == null) {
     await usuarioService.cadastrar(
