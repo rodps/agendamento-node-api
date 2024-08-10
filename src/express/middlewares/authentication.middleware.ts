@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { ApplicationError } from '../../application/errors/application.error'
-import { AuthFactory } from '../factories/auth.factory'
+import { AuthFactory } from '../api/auth/auth.factory'
 
 export const auth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.headers.authorization == null) {

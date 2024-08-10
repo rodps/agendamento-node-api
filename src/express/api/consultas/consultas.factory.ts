@@ -1,9 +1,9 @@
-import { type IPacienteRepository, type IConsultaRepository, type IMedicoRepository } from '../../application/interfaces/repository.interface'
-import { ConsultaService } from '../../application/services/consulta.service'
-import { ConsultaRepository } from '../../infrastructure/repositories/consulta.repository'
-import { MedicoRepository } from '../../infrastructure/repositories/medico.repository'
-import { PacienteRepository } from '../../infrastructure/repositories/paciente.repository'
-import { ConsultasController } from '../controllers/consultas.controller'
+import { type IPacienteRepository, type IConsultaRepository, type IMedicoRepository } from '../../../application/interfaces/repository.interface'
+import { ConsultaService } from '../../../application/services/consulta.service'
+import { ConsultaRepository } from '../../../infrastructure/repositories/consulta.repository'
+import { MedicoRepository } from '../../../infrastructure/repositories/medico.repository'
+import { PacienteRepository } from '../../../infrastructure/repositories/paciente.repository'
+import { ConsultasController } from './consultas.controller'
 
 export class ConsultasFactory {
   createConsultaRepository (): IConsultaRepository {

@@ -1,7 +1,7 @@
 import db from '../src/db'
 import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
-import { AuthFactory } from '../src/express/factories/auth.factory'
-import { UsuariosFactory } from '../src/express/factories/usuarios.factory'
+import { AuthFactory } from '../src/express/api/auth/auth.factory'
+import { UsuariosFactory } from '../src/express/api/usuarios/usuarios.factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -31,7 +31,7 @@ export const getAuthToken = async (): Promise<string> => {
       new UsuarioDtoRequest('test', 'testuser_123@test.com', '12345678')
     )
   }
-  const token = await authService.login('testuser_123@test.com', '12345678')
+  const { token } = await authService.login({ email: 'testuser_123@test.com', password: '12345678' })
 
   return token
 }

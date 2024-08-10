@@ -1,7 +1,7 @@
-import { type IPacienteRepository } from '../../application/interfaces/repository.interface'
-import { PacienteService } from '../../application/services/paciente.service'
-import { PacienteRepository } from '../../infrastructure/repositories/paciente.repository'
-import { PacientesController } from '../controllers/pacientes.controller'
+import { type IPacienteRepository } from '../../../application/interfaces/repository.interface'
+import { PacienteService } from '../../../application/services/paciente.service'
+import { PacienteRepository } from '../../../infrastructure/repositories/paciente.repository'
+import { PacientesController } from './pacientes.controller'
 
 export class PacientesFactory {
   createPacienteRepository (): IPacienteRepository {

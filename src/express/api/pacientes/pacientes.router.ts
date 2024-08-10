@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { PacientesFactory } from '../factories/pacientes.factory'
+import { PacientesFactory } from './pacientes.factory'
 
 const pacientesRouter = Router()
 
