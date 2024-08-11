@@ -1,7 +1,7 @@
 import db from '../src/db'
 import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
-import { AuthFactory } from '../src/express/api/auth/auth.factory'
-import { UsuariosFactory } from '../src/express/api/usuarios/usuarios.factory'
+import { AuthFactory } from '../src/express/factories/auth.factory'
+import { UsuariosFactory } from '../src/express/factories/usuarios.factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -22,8 +22,8 @@ export const closeDbConnection = async (): Promise<void> => {
 
 export const getAuthToken = async (): Promise<string> => {
   isTestEnv()
-  const authService = new AuthFactory().createAuthService()
-  const usuarioService = new UsuariosFactory().createUsuarioService()
+  const authService = AuthFactory.createAuthService()
+  const usuarioService = UsuariosFactory.createUsuarioService()
 
   const usuario = await usuarioService.buscarPorEmail('testuser_123@test.com')
   if (usuario == null) {
