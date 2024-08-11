@@ -19,12 +19,14 @@ describe('Cadastrar Paciente', () => {
       dataNascimento: '2022-01-01'
     })
 
+    const { data } = response.body
+
     expect(response.status).toBe(201)
-    expect(response.body.id).toBeDefined()
-    expect(response.body.nome).toBe('nome')
-    expect(response.body.telefone).toBe('12345678')
-    expect(response.body.cpf).toBe('12345678910')
-    expect(response.body.dataNascimento).toBe('2022-01-01')
+    expect(data.id).toBeDefined()
+    expect(data.nome).toBe('nome')
+    expect(data.telefone).toBe('12345678')
+    expect(data.cpf).toBe('12345678910')
+    expect(data.dataNascimento).toBe('2022-01-01')
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {
@@ -36,7 +38,7 @@ describe('Cadastrar Paciente', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o telefone for vazio', async () => {
@@ -48,7 +50,7 @@ describe('Cadastrar Paciente', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o cpf for vazio', async () => {
@@ -60,7 +62,7 @@ describe('Cadastrar Paciente', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a data de nascimento for vazia', async () => {
@@ -72,7 +74,7 @@ describe('Cadastrar Paciente', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a data de nascimento for invalida', async () => {
@@ -84,6 +86,6 @@ describe('Cadastrar Paciente', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 })

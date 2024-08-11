@@ -4,13 +4,12 @@ import { closeDbConnection, deleteAllFromTable, getAuthToken } from '../../helpe
 import { Consulta, ConsultaStatus } from '../../../src/application/entity/consulta.entity'
 import { Medico } from '../../../src/application/entity/medico.entity'
 import { Paciente } from '../../../src/application/entity/paciente.entity'
-import { ConsultasFactory } from '../../../src/express/api/consultas/consultas.factory'
+import { ConsultasFactory } from '../../../src/main/factories/consultas.factory'
 
 const createTestData = async (): Promise<void> => {
-  const consultasFactory = new ConsultasFactory()
-  const medicoRepository = consultasFactory.createMedicoRepository()
-  const pacienteRepository = consultasFactory.createPacienteRepository()
-  const consultaRepository = consultasFactory.createConsultaRepository()
+  const medicoRepository = ConsultasFactory.createMedicoRepository()
+  const pacienteRepository = ConsultasFactory.createPacienteRepository()
+  const consultaRepository = ConsultasFactory.createConsultaRepository()
 
   await deleteAllFromTable('consultas')
   await deleteAllFromTable('medicos')
@@ -67,13 +66,15 @@ describe('Agendar Consulta', () => {
       pacienteId: 1
     }).auth(token, { type: 'bearer' })
 
+    const { data } = result.body
+
     expect(result.status).toBe(201)
-    expect(result.body.id).toBeDefined()
-    expect(result.body.dataInicio).toBe('2022-01-03T00:00:00.000Z')
-    expect(result.body.dataFim).toBe('2022-01-03T01:00:00.000Z')
-    expect(result.body.medicoId).toBe(1)
-    expect(result.body.pacienteId).toBe(1)
-    expect(result.body.status).toBe('PENDENTE')
+    expect(data.id).toBeDefined()
+    expect(data.dataInicio).toBe('2022-01-03T00:00:00.000Z')
+    expect(data.dataFim).toBe('2022-01-03T01:00:00.000Z')
+    expect(data.medicoId).toBe(1)
+    expect(data.pacienteId).toBe(1)
+    expect(data.status).toBe('PENDENTE')
   })
 
   test('deve retornar 400 quando o medicoId for invalido', async () => {
@@ -85,7 +86,7 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBe('medicoId não encontrado')
+    expect(result.body.message).toBe('medicoId não encontrado')
   })
 
   test('deve retornar 400 quando o pacienteId for invalido', async () => {
@@ -97,7 +98,7 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBe('pacienteId não encontrado')
+    expect(result.body.message).toBe('pacienteId não encontrado')
   })
 
   test('deve retornar 400 quando a data de inicio for vazia', async () => {
@@ -108,8 +109,8 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBeDefined()
-    expect(result.body.erro).toHaveLength(1)
+    expect(result.body.errors).toBeDefined()
+    expect(result.body.errors).toHaveLength(1)
   })
 
   test('deve retornar 400 quando a data de fim for vazia', async () => {
@@ -120,8 +121,8 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBeDefined()
-    expect(result.body.erro).toHaveLength(1)
+    expect(result.body.errors).toBeDefined()
+    expect(result.body.errors).toHaveLength(1)
   })
 
   test('deve retornar 400 quando a data de inicio for maior que a data de fim', async () => {
@@ -133,7 +134,7 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBe(
+    expect(result.body.message).toBe(
       'Data inicial deve ser anterior a data final'
     )
   })
@@ -147,6 +148,6 @@ describe('Agendar Consulta', () => {
     }).auth(token, { type: 'bearer' })
 
     expect(result.status).toBe(400)
-    expect(result.body.erro).toBe('Horário indisponível')
+    expect(result.body.message).toBe('Horário indisponível')
   })
 })

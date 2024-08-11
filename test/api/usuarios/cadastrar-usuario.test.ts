@@ -12,18 +12,20 @@ describe('Cadastrar Usuário', () => {
   })
 
   it('deve retornar 201', async () => {
-    const data = {
+    const body = {
       nome: 'nome',
       email: 'email@test.com',
       password: '12345678'
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/usuarios').send(body)
+
+    const { data } = response.body
 
     expect(response.status).toBe(201)
-    expect(response.body.id).toBeDefined()
-    expect(response.body.nome).toBe(data.nome)
-    expect(response.body.email).toBe(data.email)
-    expect(response.body.password).toBeUndefined()
+    expect(data.id).toBeDefined()
+    expect(data.nome).toBe(data.nome)
+    expect(data.email).toBe(data.email)
+    expect(data.password).toBeUndefined()
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {
@@ -35,7 +37,7 @@ describe('Cadastrar Usuário', () => {
     const response = await request(app).post('/usuarios').send(data)
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o email for vazio', async () => {
@@ -47,7 +49,7 @@ describe('Cadastrar Usuário', () => {
     const response = await request(app).post('/usuarios').send(data)
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a senha for vazia', async () => {
@@ -59,7 +61,7 @@ describe('Cadastrar Usuário', () => {
     const response = await request(app).post('/usuarios').send(data)
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o email for invalido', async () => {
@@ -71,6 +73,6 @@ describe('Cadastrar Usuário', () => {
     const response = await request(app).post('/usuarios').send(data)
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.errors).toHaveLength(1)
   })
 })
