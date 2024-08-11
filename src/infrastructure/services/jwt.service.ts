@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { type Usuario } from '../../application/entity/usuario.entity'
 import { ApplicationError } from '../../application/errors/application.error'
-import { appConfig } from '../../app-config'
+import { appConfig } from '../../main/config/app.config'
 import { type IJwtService, type IJwtPayload } from '../../application/interfaces/jwt-service.interface'
 
 export class JwtService implements IJwtService {

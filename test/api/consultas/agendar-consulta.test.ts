@@ -4,7 +4,7 @@ import { closeDbConnection, deleteAllFromTable, getAuthToken } from '../../helpe
 import { Consulta, ConsultaStatus } from '../../../src/application/entity/consulta.entity'
 import { Medico } from '../../../src/application/entity/medico.entity'
 import { Paciente } from '../../../src/application/entity/paciente.entity'
-import { createConsultaRepository, createMedicoRepository, createPacienteRepository } from '../../../src/express/factories/infrastructure/repository.factory'
+import { createConsultaRepository, createMedicoRepository, createPacienteRepository } from '../../../src/main/factories/infrastructure/repository.factory'
 
 const createTestData = async (): Promise<void> => {
   const medicoRepository = createMedicoRepository()
