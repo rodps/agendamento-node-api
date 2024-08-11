@@ -4,12 +4,12 @@ import { closeDbConnection, deleteAllFromTable, getAuthToken } from '../../helpe
 import { Consulta, ConsultaStatus } from '../../../src/application/entity/consulta.entity'
 import { Medico } from '../../../src/application/entity/medico.entity'
 import { Paciente } from '../../../src/application/entity/paciente.entity'
-import { ConsultasFactory } from '../../../src/express/factories/consultas.factory'
+import { createConsultaRepository, createMedicoRepository, createPacienteRepository } from '../../../src/express/factories/infrastructure/repository.factory'
 
 const createTestData = async (): Promise<void> => {
-  const medicoRepository = ConsultasFactory.createMedicoRepository()
-  const pacienteRepository = ConsultasFactory.createPacienteRepository()
-  const consultaRepository = ConsultasFactory.createConsultaRepository()
+  const medicoRepository = createMedicoRepository()
+  const pacienteRepository = createPacienteRepository()
+  const consultaRepository = createConsultaRepository()
 
   await deleteAllFromTable('consultas')
   await deleteAllFromTable('medicos')

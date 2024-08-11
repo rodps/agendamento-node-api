@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { PacientesFactory } from '../../factories/pacientes.factory'
+import { createPacientesController } from '../../factories/express/controller.factory'
 
 const pacientesRouter = Router()
-
-const controller = PacientesFactory.createPacientesController()
+const controller = createPacientesController()
 
 pacientesRouter.post('/pacientes', controller.cadastrar)
 

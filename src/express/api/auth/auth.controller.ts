@@ -1,11 +1,9 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { type AuthService } from '../../../application/services/auth.service'
 import { LoginDto } from './dto/login.dto'
+import { type AuthService } from '../../../application/services/auth.service'
 
 export class AuthController {
-  constructor (
-    private readonly authService: AuthService
-  ) {}
+  constructor (private readonly authService: AuthService) {}
 
   public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

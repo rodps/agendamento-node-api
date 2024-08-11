@@ -3,9 +3,7 @@ import { type PacienteService } from '../../../application/services/paciente.ser
 import { CadastrarPacienteDto } from './dto/cadastrar-paciente.dto'
 
 export class PacientesController {
-  constructor (
-    private readonly pacienteService: PacienteService
-  ) {}
+  constructor (private readonly pacienteService: PacienteService) {}
 
   public cadastrar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

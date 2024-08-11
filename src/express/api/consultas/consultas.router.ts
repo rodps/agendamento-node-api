@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
 import { auth } from '../../middlewares/authentication.middleware'
-import { ConsultasFactory } from '../../factories/consultas.factory'
+import { createConsultasController } from '../../factories/express/controller.factory'
 
 const consultasRouter = Router()
-
-const controller = ConsultasFactory.createConsultasController()
+const controller = createConsultasController()
 
 consultasRouter.post('/consultas', auth, controller.agendar)
 

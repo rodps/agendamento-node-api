@@ -3,9 +3,7 @@ import { type UsuarioService } from '../../../application/services/usuario.servi
 import { CadastrarUsuarioDto } from './dto/cadastrar-usuario.dto'
 
 export class UsuariosController {
-  constructor (
-    private readonly usuarioService: UsuarioService
-  ) {}
+  constructor (private readonly usuarioService: UsuarioService) {}
 
   public cadastrar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
