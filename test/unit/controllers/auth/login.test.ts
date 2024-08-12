@@ -5,6 +5,7 @@ import { type AuthService } from '../../../../src/application/services/auth.serv
 import { LoginDto } from '../../../../src/express/api/auth/dto/login.dto'
 import { LoginDtoResponse } from '../../../../src/application/dto/auth/login.dto'
 import httpMocks from 'node-mocks-http'
+import { HttpResponse } from '../../../../src/express/helpers/http-response'
 
 describe('AuthController: login', () => {
   const authService = mock<AuthService>()
@@ -40,7 +41,7 @@ describe('AuthController: login', () => {
     expect(res.statusCode).toBe(200)
 
     const data = res._getJSONData()
-    expect(data).toEqual(result)
+    expect(data).toEqual(HttpResponse.ok(result).body)
   })
 
   test('deve chamar a função next quanto ocorrer um erro', async () => {

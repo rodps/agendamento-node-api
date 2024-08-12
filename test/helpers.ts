@@ -1,6 +1,6 @@
 import db from '../src/db'
 import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
-import { createAuthService, createUsuarioService } from '../src/main/factories/application/app-service.factory'
+import { createAuthService, createUsuarioService } from '../src/main/factories/application-services.factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {

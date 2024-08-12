@@ -1,6 +1,7 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { LoginDto } from './dto/login.dto'
 import { type AuthService } from '../../../application/services/auth.service'
+import { HttpResponse } from '../../helpers/http-response'
 
 export class AuthController {
   constructor (private readonly authService: AuthService) {}
@@ -8,7 +9,9 @@ export class AuthController {
   public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.authService.login(new LoginDto(req.body))
-      res.status(200).json(result)
+
+      const { statusCode, body } = HttpResponse.ok(result)
+      res.status(statusCode).json(body)
     } catch (err) {
       next(err)
     }

@@ -23,10 +23,10 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(201)
-    expect(response.body.id).toBeDefined()
-    expect(response.body.crm).toBe('123456')
-    expect(response.body.especialidade).toBe('especialidade')
-    expect(response.body.nome).toBe('nome')
+    expect(response.body.data.id).toBeDefined()
+    expect(response.body.data.crm).toBe('123456')
+    expect(response.body.data.especialidade).toBe('especialidade')
+    expect(response.body.data.nome).toBe('nome')
   })
 
   it('deve retornar 400 quando o crm ja existir', async () => {
@@ -43,7 +43,7 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toBe('CRM já existe')
+    expect(response.body.error.message).toBe('CRM já existe')
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {
@@ -54,7 +54,7 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.error.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando o crm for vazio', async () => {
@@ -65,7 +65,7 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.error.errors).toHaveLength(1)
   })
 
   it('deve retornar 400 quando a especialidade for vazia', async () => {
@@ -76,6 +76,6 @@ describe('Cadastrar Medico', () => {
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.erro).toHaveLength(1)
+    expect(response.body.error.errors).toHaveLength(1)
   })
 })

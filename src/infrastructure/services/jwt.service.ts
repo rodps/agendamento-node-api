@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
 import { type Usuario } from '../../application/entity/usuario.entity'
-import { ApplicationError } from '../../application/errors/application.error'
 import { appConfig } from '../../main/config/app.config'
 import { type IJwtService, type IJwtPayload } from '../../application/interfaces/jwt-service.interface'
 
@@ -17,7 +16,7 @@ export class JwtService implements IJwtService {
     try {
       return jwt.verify(token, appConfig.jwtSecret) as unknown as IJwtPayload
     } catch (error) {
-      throw new ApplicationError('Invalid token', 401)
+      throw new Error('Token invalido')
     }
   }
 }

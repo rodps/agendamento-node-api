@@ -1,7 +1,8 @@
 import { type LoginDtoRequest, LoginDtoResponse } from '../dto/auth/login.dto'
 import { ApplicationError } from '../errors/application.error'
+import { JwtDecodeError } from '../errors/jwt-decode.error'
 import { type IEncryptionService } from '../interfaces/encryption-service.interface'
-import { type IJwtService } from '../interfaces/jwt-service.interface'
+import { type IJwtPayload, type IJwtService } from '../interfaces/jwt-service.interface'
 import { type IUsuarioRepository } from '../interfaces/repository.interface'
 
 export class AuthService {
@@ -23,5 +24,13 @@ export class AuthService {
 
     const token = this.jwtService.generateToken(usuario)
     return new LoginDtoResponse(token)
+  }
+
+  async validateToken (token: string): Promise<IJwtPayload> {
+    try {
+      return this.jwtService.decodeToken(token)
+    } catch (error) {
+      throw new JwtDecodeError('Token invalido')
+    }
   }
 }
