@@ -1,6 +1,6 @@
 import { type LoginDtoRequest, LoginDtoResponse } from '../dto/auth/login.dto'
 import { ApplicationError } from '../errors/application.error'
-import { JwtDecodeError } from '../errors/jwt-decode.error'
+import { InvalidTokenError } from '../errors/invalid-token.error'
 import { type IEncryptionService } from '../interfaces/encryption-service.interface'
 import { type IJwtPayload, type IJwtService } from '../interfaces/jwt-service.interface'
 import { type IUsuarioRepository } from '../interfaces/repository.interface'
@@ -30,7 +30,7 @@ export class AuthService {
     try {
       return this.jwtService.decodeToken(token)
     } catch (error) {
-      throw new JwtDecodeError('Token invalido')
+      throw new InvalidTokenError('Token invalido')
     }
   }
 }

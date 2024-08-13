@@ -3,7 +3,7 @@ import { ApplicationError } from '../../application/errors/application.error'
 import { ZodError } from 'zod'
 import { HttpResponse } from '../helpers/http-response'
 import { ErrorTypes } from '../constants/error-types'
-import { JwtDecodeError } from '../../application/errors/jwt-decode.error'
+import { InvalidTokenError } from '../../application/errors/invalid-token.error'
 import { TokenNotFoundError } from '../errors/token-not-found.error'
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
@@ -30,7 +30,7 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
         errors
       }
     })
-  } else if (err instanceof JwtDecodeError) {
+  } else if (err instanceof InvalidTokenError) {
     HttpResponse(res).send(401, {
       error: {
         message: err.message,
