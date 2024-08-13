@@ -3,6 +3,8 @@ import { ApplicationError } from '../../application/errors/application.error'
 import { ZodError } from 'zod'
 import { HttpResponse } from '../helpers/http-response'
 import { ErrorTypes } from '../constants/error-types'
+import { JwtDecodeError } from '../../application/errors/jwt-decode.error'
+import { TokenNotFoundError } from '../errors/token-not-found.error'
 
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
   if (err === undefined) {
@@ -16,8 +18,7 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
         type: ErrorTypes.APPLICATION_ERROR
       }
     })
-  }
-  if (err instanceof ZodError) {
+  } else if (err instanceof ZodError) {
     const errors = err.errors.map((issue: any) => ({
       path: issue.path,
       message: issue.message
@@ -27,6 +28,20 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
         message: 'Parâmetros inválidos',
         type: ErrorTypes.PARAM_ERROR,
         errors
+      }
+    })
+  } else if (err instanceof JwtDecodeError) {
+    HttpResponse(res).send(401, {
+      error: {
+        message: err.message,
+        type: ErrorTypes.AUTHORIZATION_ERROR
+      }
+    })
+  } else if (err instanceof TokenNotFoundError) {
+    HttpResponse(res).send(401, {
+      error: {
+        message: err.message,
+        type: ErrorTypes.AUTHORIZATION_ERROR
       }
     })
   } else {

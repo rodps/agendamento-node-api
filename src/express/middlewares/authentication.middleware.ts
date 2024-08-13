@@ -1,41 +1,25 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { createAuthService } from '../../main/factories/application-services.factory'
-import { HttpResponse } from '../helpers/http-response'
-import { ErrorTypes } from '../constants/error-types'
+import { TokenNotFoundError } from '../errors/token-not-found.error'
 
 export const auth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const token = getBearerToken(req.headers.authorization)
-
-  if (token === null || token.length === 0) {
-    HttpResponse(res).send(401, {
-      error: {
-        message: 'Token não encontrado',
-        type: ErrorTypes.AUTHORIZATION_ERROR
-      }
-    })
-    return
-  }
-
-  const authService = createAuthService()
-
   try {
+    const token = getBearerToken(req.headers.authorization)
+    if (token === null || token.length === 0) {
+      throw new TokenNotFoundError()
+    }
+
+    const authService = createAuthService()
     const payload = await authService.validateToken(token)
     req.user = {
       id: payload.sub,
       nome: payload.nome,
       role: payload.role
     }
-  } catch (error) {
-    HttpResponse(res).send(401, {
-      error: {
-        message: 'Token inválido',
-        type: ErrorTypes.AUTHORIZATION_ERROR
-      }
-    })
-    return
+    next()
+  } catch (err) {
+    next(err)
   }
-
-  next()
 }
 
 const getBearerToken = (authorization: string | undefined): string | null => {
