@@ -10,8 +10,7 @@ export class PacientesController {
     try {
       const result = await this.pacienteService.cadastrar(new CadastrarPacienteDto(req.body))
 
-      const { statusCode, body } = HttpResponse.created(result)
-      res.status(statusCode).json(body)
+      HttpResponse(res).send(201, { data: result })
     } catch (err) {
       next(err)
     }

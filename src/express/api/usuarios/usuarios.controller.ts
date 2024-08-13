@@ -10,8 +10,7 @@ export class UsuariosController {
     try {
       const result = await this.usuarioService.cadastrar(new CadastrarUsuarioDto(req.body))
 
-      const { statusCode, body } = HttpResponse.created(result)
-      res.status(statusCode).json(body)
+      HttpResponse(res).send(201, { data: result })
     } catch (err) {
       next(err)
     }

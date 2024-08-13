@@ -1,14 +1,18 @@
 import { type NextFunction, type Request, type Response } from 'express'
 import { createAuthService } from '../../main/factories/application-services.factory'
 import { HttpResponse } from '../helpers/http-response'
+import { ErrorTypes } from '../constants/error-types'
 
 export const auth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const token = getBearerToken(req.headers.authorization)
 
-  const { statusCode, body } = HttpResponse.unauthorized()
-
   if (token === null || token.length === 0) {
-    res.status(statusCode).json(body)
+    HttpResponse(res).send(401, {
+      error: {
+        message: 'Token não encontrado',
+        type: ErrorTypes.AUTHORIZATION_ERROR
+      }
+    })
     return
   }
 
@@ -22,7 +26,12 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
       role: payload.role
     }
   } catch (error) {
-    res.status(statusCode).json(body)
+    HttpResponse(res).send(401, {
+      error: {
+        message: 'Token inválido',
+        type: ErrorTypes.AUTHORIZATION_ERROR
+      }
+    })
     return
   }
 

@@ -10,8 +10,7 @@ export class AuthController {
     try {
       const result = await this.authService.login(new LoginDto(req.body))
 
-      const { statusCode, body } = HttpResponse.ok(result)
-      res.status(statusCode).json(body)
+      HttpResponse(res).send(200, { data: result })
     } catch (err) {
       next(err)
     }
