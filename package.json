@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "rimraf ./build && tsc",
+    "start": "node build/index.js",
     "test": "npm run test:unit",
     "test:unit": "jest test/unit --verbose",
     "test:api": "jest test/api --runInBand",
@@ -25,6 +27,7 @@
     "jest-mock-extended": "^3.0.7",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.7",
+    "rimraf": "^6.0.1",
     "supertest": "^7.0.0",
     "zod": "^3.23.8"
   },
