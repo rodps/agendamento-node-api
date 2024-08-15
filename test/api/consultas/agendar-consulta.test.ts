@@ -33,7 +33,7 @@ const createTestData = async (): Promise<void> => {
   )
 }
 
-describe('Agendar Consulta', () => {
+describe('POST /consultas', () => {
   let token = ''
 
   afterAll(async () => {

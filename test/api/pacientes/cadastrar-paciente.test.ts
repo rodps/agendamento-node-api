@@ -2,7 +2,7 @@ import { closeDbConnection, deleteAllFromTable } from '../../helpers'
 import request from 'supertest'
 import app from '../../../src/express/app'
 
-describe('Cadastrar Paciente', () => {
+describe('POST /pacientes', () => {
   afterAll(async () => {
     await closeDbConnection()
   })
