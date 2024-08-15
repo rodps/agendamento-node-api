@@ -5,7 +5,8 @@
   "scripts": {
     "build": "rimraf ./build && tsc -p ./tsconfig.build.json",
     "start": "node build/index.js",
-    "test": "npm run test:unit",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
     "test:unit": "jest test/unit",
     "test:api": "jest test/api --runInBand",
     "test:integration": "jest test/integration --runInBand",
