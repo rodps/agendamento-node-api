@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./build && tsc -p ./tsconfig.build.json",
     "start": "node build/index.js",
     "test": "npm run test:unit",
     "test:unit": "jest test/unit --verbose",
