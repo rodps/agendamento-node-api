@@ -17,7 +17,7 @@ export class Usuario extends ApplicationEntity {
     isNotEmpty(role, 'Role obrigatorio')
   }
 
-  static fromDto (dto: UsuarioDtoRequest): Usuario {
+  static from (dto: UsuarioDtoRequest): Usuario {
     return new Usuario(
       null,
       dto.nome,

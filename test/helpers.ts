@@ -1,6 +1,7 @@
 import db from '../src/db'
 import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
-import { createAuthService, createUsuarioService } from '../src/main/factories/application-services.factory'
+import { createAuthService } from '../src/main/factories/application-services.factory'
+import { createUsuarioRepository } from '../src/main/factories/repositories.factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -22,11 +23,11 @@ export const closeDbConnection = async (): Promise<void> => {
 export const getAuthToken = async (): Promise<string> => {
   isTestEnv()
   const authService = createAuthService()
-  const usuarioService = createUsuarioService()
+  const usuarioRepository = createUsuarioRepository()
 
-  const usuario = await usuarioService.buscarPorEmail('testuser_123@test.com')
+  const usuario = await usuarioRepository.buscarPorEmail('testuser_123@test.com')
   if (usuario == null) {
-    await usuarioService.cadastrar(
+    await authService.cadastrar(
       new UsuarioDtoRequest('test', 'testuser_123@test.com', '12345678')
     )
   }

@@ -5,6 +5,8 @@ import { createAuthController } from '../../../main/factories/controllers.factor
 const authRouter = Router()
 const controller = createAuthController()
 
-authRouter.post('/auth/login', controller.login)
+authRouter
+  .post('/auth/login', controller.login)
+  .post('/auth/register', controller.register)
 
 export { authRouter }

@@ -9,19 +9,15 @@ export class UsuarioDtoRequest {
 }
 
 export class UsuarioDtoResponse {
-  constructor (
-    readonly id: number,
-    readonly nome: string,
-    readonly email: string,
-    readonly role: string
-  ) {}
+  readonly id: number
+  readonly nome: string
+  readonly email: string
+  readonly role: string
 
-  static fromEntity (usuario: Usuario): UsuarioDtoResponse {
-    return new UsuarioDtoResponse(
-      usuario.getIdOrThrow(),
-      usuario.nome,
-      usuario.email,
-      usuario.role
-    )
+  constructor (usuario: Usuario) {
+    this.id = usuario.getIdOrThrow()
+    this.nome = usuario.nome
+    this.email = usuario.email
+    this.role = usuario.role
   }
 }

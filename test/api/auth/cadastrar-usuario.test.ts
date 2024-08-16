@@ -2,7 +2,7 @@ import { closeDbConnection, deleteAllFromTable } from '../../helpers'
 import request from 'supertest'
 import app from '../../../src/express/app'
 
-describe('POST /usuarios', () => {
+describe('POST /auth/register', () => {
   afterAll(async () => {
     await closeDbConnection()
   })
@@ -17,7 +17,7 @@ describe('POST /usuarios', () => {
       email: 'email@test.com',
       password: '12345678'
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/auth/register').send(data)
 
     expect(response.status).toBe(201)
     expect(response.body.data.id).toBeDefined()
@@ -32,7 +32,7 @@ describe('POST /usuarios', () => {
       email: 'email@test.com',
       password: '12345678'
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/auth/register').send(data)
 
     expect(response.status).toBe(400)
     expect(response.body.error.errors).toHaveLength(1)
@@ -44,7 +44,7 @@ describe('POST /usuarios', () => {
       email: '',
       password: '12345678'
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/auth/register').send(data)
 
     expect(response.status).toBe(400)
     expect(response.body.error.errors).toHaveLength(1)
@@ -56,7 +56,7 @@ describe('POST /usuarios', () => {
       email: 'email@test.com',
       password: ''
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/auth/register').send(data)
 
     expect(response.status).toBe(400)
     expect(response.body.error.errors).toHaveLength(1)
@@ -68,7 +68,7 @@ describe('POST /usuarios', () => {
       email: 'email',
       password: '12345678'
     }
-    const response = await request(app).post('/usuarios').send(data)
+    const response = await request(app).post('/auth/register').send(data)
 
     expect(response.status).toBe(400)
     expect(response.body.error.errors).toHaveLength(1)

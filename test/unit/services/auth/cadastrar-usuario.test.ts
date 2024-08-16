@@ -1,14 +1,16 @@
 import { mock } from 'jest-mock-extended'
-import { UsuarioService } from '../../../../src/application/services/usuario.service'
 import { type IUsuarioRepository } from '../../../../src/application/interfaces/repository.interface'
 import { UserRole, Usuario } from '../../../../src/application/entity/usuario.entity'
 import { type IEncryptionService } from '../../../../src/application/interfaces/encryption-service.interface'
 import { ApplicationError } from '../../../../src/application/errors/application.error'
+import { AuthService } from '../../../../src/application/services/auth.service'
+import { type IJwtService } from '../../../../src/application/interfaces/jwt-service.interface'
 
-describe('Cadastrar Usuário', () => {
+describe('Auth Service: cadastrar usuário', () => {
   const usuarioRepository = mock<IUsuarioRepository>()
   const encryptionService = mock<IEncryptionService>()
-  const sut = new UsuarioService(usuarioRepository, encryptionService)
+  const jwtService = mock<IJwtService>()
+  const sut = new AuthService(encryptionService, usuarioRepository, jwtService)
 
   test('deve retornar um erro caso o email já esteja cadastrado', async () => {
     // arrange

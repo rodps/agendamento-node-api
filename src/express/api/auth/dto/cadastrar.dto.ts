@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { UsuarioDtoRequest } from '../../../../application/dto/usuario/usuario.dto'
 
-export class CadastrarUsuarioDto extends UsuarioDtoRequest {
+export class CadastrarDto extends UsuarioDtoRequest {
   constructor (body: any) {
     const data = z.object({
       nome: z.string().min(3),
