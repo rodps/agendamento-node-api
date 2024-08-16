@@ -1,7 +1,12 @@
 import { z } from 'zod'
-import { PacienteDtoRequest } from '../../../../application/dto/paciente/paciente.dto'
+import { type PacienteDto } from '../../../../application/dto/paciente/paciente.dto'
 
-export class CadastrarPacienteDto extends PacienteDtoRequest {
+export class CadastrarPacienteDto implements PacienteDto {
+  nome: string
+  telefone: string
+  cpf: string
+  dataNascimento: string
+
   constructor (body: any) {
     const data = z.object({
       nome: z.string().min(3),
@@ -10,6 +15,9 @@ export class CadastrarPacienteDto extends PacienteDtoRequest {
       dataNascimento: z.string().date()
     }).parse(body)
 
-    super(data.nome, data.telefone, data.cpf, data.dataNascimento)
+    this.nome = data.nome
+    this.telefone = data.telefone
+    this.cpf = data.cpf
+    this.dataNascimento = data.dataNascimento
   }
 }

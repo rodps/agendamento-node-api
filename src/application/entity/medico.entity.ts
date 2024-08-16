@@ -1,4 +1,4 @@
-import { type MedicoDtoRequest } from '../dto/medico/medico.dto'
+import { type MedicoDto } from '../dto/medico/medico.dto'
 import { isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
@@ -15,7 +15,7 @@ export class Medico extends ApplicationEntity {
     isNotEmpty(especialidade, 'Especialidade obrigatorio')
   }
 
-  static from (dto: MedicoDtoRequest): Medico {
+  static from (dto: MedicoDto): Medico {
     return new Medico(null, dto.nome, dto.crm, dto.especialidade)
   }
 }

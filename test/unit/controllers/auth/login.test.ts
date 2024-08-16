@@ -2,9 +2,8 @@
 import { mock } from 'jest-mock-extended'
 import { AuthController } from '../../../../src/express/api/auth/auth.controller'
 import { type AuthService } from '../../../../src/application/services/auth.service'
-import { LoginDto } from '../../../../src/express/api/auth/dto/login.dto'
-import { LoginDtoResponse } from '../../../../src/application/dto/auth/login.dto'
 import httpMocks from 'node-mocks-http'
+import { LoginDtoRequest } from '../../../../src/express/api/auth/dto/login.dto'
 
 describe('AuthController: login', () => {
   const authService = mock<AuthService>()
@@ -21,7 +20,7 @@ describe('AuthController: login', () => {
 
     // assert
     expect(authService.login).toHaveBeenCalledTimes(1)
-    expect(authService.login).toHaveBeenCalledWith(new LoginDto(req.body))
+    expect(authService.login).toHaveBeenCalledWith(new LoginDtoRequest(req.body))
   })
 
   test('deve retornar o resultado correto', async () => {
@@ -30,7 +29,7 @@ describe('AuthController: login', () => {
       body: { email: 'email', password: 'password' }
     })
     const res = httpMocks.createResponse()
-    const result = new LoginDtoResponse('token')
+    const result = { token: 'token' }
     authService.login.mockResolvedValueOnce(result)
 
     // act

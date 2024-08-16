@@ -1,4 +1,4 @@
-import { type PacienteDtoRequest } from '../dto/paciente/paciente.dto'
+import { type PacienteDto } from '../dto/paciente/paciente.dto'
 import { isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
@@ -17,7 +17,7 @@ export class Paciente extends ApplicationEntity {
     isNotEmpty(dataNascimento, 'Data de nascimento obrigatorio')
   }
 
-  static from (dto: PacienteDtoRequest): Paciente {
+  static from (dto: PacienteDto): Paciente {
     return new Paciente(
       null,
       dto.nome,

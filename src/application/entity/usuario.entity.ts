@@ -1,4 +1,4 @@
-import { type UsuarioDtoRequest } from '../dto/usuario/usuario.dto'
+import { type UsuarioDto } from '../dto/usuario/usuario.dto'
 import { isEmail, isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
@@ -17,7 +17,7 @@ export class Usuario extends ApplicationEntity {
     isNotEmpty(role, 'Role obrigatorio')
   }
 
-  static from (dto: UsuarioDtoRequest): Usuario {
+  static from (dto: UsuarioDto): Usuario {
     return new Usuario(
       null,
       dto.nome,

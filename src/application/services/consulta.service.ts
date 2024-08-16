@@ -1,13 +1,6 @@
-import {
-  ConsultaDtoResponse,
-  type ConsultaDtoRequest
-} from '../dto/consulta/consulta.dto'
+import { type ConsultaDto } from '../dto/consulta/consulta.dto'
 import { Consulta } from '../entity/consulta.entity'
-import {
-  type IConsultaRepository,
-  type IMedicoRepository,
-  type IPacienteRepository
-} from '../interfaces/repository.interface'
+import { type IConsultaRepository, type IMedicoRepository, type IPacienteRepository } from '../interfaces/repository.interface'
 import { isEmpty, isNotNull } from '../utils/validator'
 
 export class ConsultaService {
@@ -17,7 +10,7 @@ export class ConsultaService {
     private readonly pacienteRepository: IPacienteRepository
   ) {}
 
-  public async agendar (dto: ConsultaDtoRequest): Promise<ConsultaDtoResponse> {
+  public async agendar (dto: ConsultaDto): Promise<Consulta> {
     const medico = await this.medicoRepository.buscarPorId(dto.medicoId)
     isNotNull(medico, 'medicoId não encontrado')
 
@@ -29,6 +22,6 @@ export class ConsultaService {
 
     const consulta = await this.consultaRepository.insert(Consulta.from(dto))
 
-    return new ConsultaDtoResponse(consulta)
+    return consulta
   }
 }

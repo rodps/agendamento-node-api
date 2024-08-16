@@ -7,6 +7,6 @@ const controller = createAuthController()
 
 authRouter
   .post('/auth/login', controller.login)
-  .post('/auth/register', controller.register)
+  .post('/auth/register', controller.cadastrar)
 
 export { authRouter }

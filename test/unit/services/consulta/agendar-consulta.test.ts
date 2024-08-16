@@ -4,7 +4,7 @@ import { Consulta, ConsultaStatus } from '../../../../src/application/entity/con
 import { Medico } from '../../../../src/application/entity/medico.entity'
 import { Paciente } from '../../../../src/application/entity/paciente.entity'
 import { ConsultaService } from '../../../../src/application/services/consulta.service'
-import { type ConsultaDtoRequest } from '../../../../src/application/dto/consulta/consulta.dto'
+import { type ConsultaDto } from '../../../../src/application/dto/consulta/consulta.dto'
 import { ApplicationError } from '../../../../src/application/errors/application.error'
 
 describe('Agendar Consulta', () => {
@@ -42,7 +42,7 @@ describe('Agendar Consulta', () => {
 
   test('deve chamar o repository corretamente', async () => {
     // arrange
-    const data: ConsultaDtoRequest = {
+    const data: ConsultaDto = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,
@@ -68,7 +68,7 @@ describe('Agendar Consulta', () => {
 
   test('deve retornar um erro quando o horário estiver indisponível', async () => {
     // arrange
-    const data: ConsultaDtoRequest = {
+    const data: ConsultaDto = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,
@@ -98,7 +98,7 @@ describe('Agendar Consulta', () => {
 
   test('deve retornar uma consulta', async () => {
     // arrange
-    const data: ConsultaDtoRequest = {
+    const data: ConsultaDto = {
       dataInicio: new Date('2022-01-01 00:00:00'),
       dataFim: new Date('2022-01-01 01:00:00'),
       medicoId: 1,

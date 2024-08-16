@@ -1,5 +1,4 @@
 import db from '../src/db'
-import { UsuarioDtoRequest } from '../src/application/dto/usuario/usuario.dto'
 import { createAuthService } from '../src/main/factories/application-services.factory'
 import { createUsuarioRepository } from '../src/main/factories/repositories.factory'
 
@@ -27,9 +26,11 @@ export const getAuthToken = async (): Promise<string> => {
 
   const usuario = await usuarioRepository.buscarPorEmail('testuser_123@test.com')
   if (usuario == null) {
-    await authService.cadastrar(
-      new UsuarioDtoRequest('test', 'testuser_123@test.com', '12345678')
-    )
+    await authService.cadastrar({
+      email: 'testuser_123@test.com',
+      nome: 'testuser_123',
+      password: '12345678'
+    })
   }
   const { token } = await authService.login({ email: 'testuser_123@test.com', password: '12345678' })
 

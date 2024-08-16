@@ -1,4 +1,4 @@
-import { type ConsultaDtoRequest } from '../dto/consulta/consulta.dto'
+import { type ConsultaDto } from '../dto/consulta/consulta.dto'
 import { isGreaterThan, isNotNull } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
 
@@ -20,7 +20,7 @@ export class Consulta extends ApplicationEntity {
     isGreaterThan(dataFim, dataInicio, 'Data inicial deve ser anterior a data final')
   }
 
-  static from (dto: ConsultaDtoRequest): Consulta {
+  static from (dto: ConsultaDto): Consulta {
     return new Consulta(
       null,
       dto.dataInicio,

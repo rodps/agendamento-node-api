@@ -1,5 +1,6 @@
-import { type LoginDtoRequest, LoginDtoResponse } from '../dto/auth/login.dto'
-import { type UsuarioDtoRequest, UsuarioDtoResponse } from '../dto/usuario/usuario.dto'
+import { type CadastrarDto } from '../dto/auth/cadastrar.dto'
+import { type LoginDto } from '../dto/auth/login.dto'
+import { type TokenDto } from '../dto/auth/token.dto'
 import { Usuario } from '../entity/usuario.entity'
 import { ApplicationError } from '../errors/application.error'
 import { InvalidTokenError } from '../errors/invalid-token.error'
@@ -14,7 +15,7 @@ export class AuthService {
     private readonly jwtService: IJwtService
   ) {}
 
-  async login (dto: LoginDtoRequest): Promise<LoginDtoResponse> {
+  async login (dto: LoginDto): Promise<TokenDto> {
     const usuario = await this.usuarioRepository.buscarPorEmail(dto.email)
     if (usuario == null) {
       throw new ApplicationError('Email invalido')
@@ -25,10 +26,10 @@ export class AuthService {
     }
 
     const token = this.jwtService.generateToken(usuario)
-    return new LoginDtoResponse(token)
+    return { token }
   }
 
-  public async cadastrar (dto: UsuarioDtoRequest): Promise<UsuarioDtoResponse> {
+  public async cadastrar (dto: CadastrarDto): Promise<Usuario> {
     const usuarios = await this.usuarioRepository.buscarPorEmail(dto.email)
     if (usuarios != null) {
       throw new ApplicationError('Este email já está cadastrado')
@@ -41,8 +42,8 @@ export class AuthService {
     const user = Usuario.from(dto)
     user.password = this.encryptionService.hash(user.password)
 
-    const result = await this.usuarioRepository.insert(user)
-    return new UsuarioDtoResponse(result)
+    const inserted = await this.usuarioRepository.insert(user)
+    return inserted
   }
 
   async validateToken (token: string): Promise<IJwtPayload> {

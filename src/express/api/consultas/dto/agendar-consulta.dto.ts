@@ -1,7 +1,12 @@
 import { z } from 'zod'
-import { ConsultaDtoRequest } from '../../../../application/dto/consulta/consulta.dto'
+import { type ConsultaDto } from '../../../../application/dto/consulta/consulta.dto'
 
-export class AgendarConsultaDto extends ConsultaDtoRequest {
+export class AgendarConsultaDto implements ConsultaDto {
+  pacienteId: number
+  medicoId: number
+  dataInicio: Date
+  dataFim: Date
+
   constructor (body: any) {
     const data = z.object({
       pacienteId: z.number().positive(),
@@ -10,6 +15,9 @@ export class AgendarConsultaDto extends ConsultaDtoRequest {
       dataFim: z.string().datetime().pipe(z.coerce.date())
     }).parse(body)
 
-    super(data.pacienteId, data.medicoId, data.dataInicio, data.dataFim)
+    this.pacienteId = data.pacienteId
+    this.medicoId = data.medicoId
+    this.dataInicio = data.dataInicio
+    this.dataFim = data.dataFim
   }
 }

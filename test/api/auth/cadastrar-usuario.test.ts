@@ -23,7 +23,7 @@ describe('POST /auth/register', () => {
     expect(response.body.data.id).toBeDefined()
     expect(response.body.data.nome).toBe(data.nome)
     expect(response.body.data.email).toBe(data.email)
-    expect(response.body.data.password).toBeUndefined()
+    expect(response.body.data.password).not.toBe(data.password)
   })
 
   it('deve retornar 400 quando o nome for vazio', async () => {

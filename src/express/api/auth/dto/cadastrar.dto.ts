@@ -1,7 +1,11 @@
 import { z } from 'zod'
-import { UsuarioDtoRequest } from '../../../../application/dto/usuario/usuario.dto'
+import { type CadastrarDto } from '../../../../application/dto/auth/cadastrar.dto'
 
-export class CadastrarDto extends UsuarioDtoRequest {
+export class CadastrarDtoRequest implements CadastrarDto {
+  nome: string
+  email: string
+  password: string
+
   constructor (body: any) {
     const data = z.object({
       nome: z.string().min(3),
@@ -9,6 +13,8 @@ export class CadastrarDto extends UsuarioDtoRequest {
       password: z.string().min(8)
     }).parse(body)
 
-    super(data.nome, data.email, data.password)
+    this.nome = data.nome
+    this.email = data.email
+    this.password = data.password
   }
 }
