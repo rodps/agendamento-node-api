@@ -14,7 +14,7 @@ export class Usuario extends ApplicationEntity {
     super(id)
     guard(nome, 'Nome obrigatorio')
     guard(password, 'Password obrigatorio')
-    guard(RegExp(EMAIL_REGEX).test(email), 'Email invalido')
+    guard(EMAIL_REGEX.test(email), 'Email invalido')
     guard(role, 'Role obrigatorio')
   }
 
