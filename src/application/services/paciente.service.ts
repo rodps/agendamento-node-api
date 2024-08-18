@@ -1,7 +1,7 @@
 import { type PacienteDto } from '../dto/paciente/paciente.dto'
 import { Paciente } from '../entity/paciente.entity'
 import { type IPacienteRepository } from '../interfaces/repository.interface'
-import { isEmpty } from '../utils/validator'
+import { guard } from '../utils/guard'
 
 export class PacienteService {
   constructor (
@@ -10,7 +10,7 @@ export class PacienteService {
 
   async cadastrar (dto: PacienteDto): Promise<Paciente> {
     const pacientes = await this.pacienteRepository.buscarPorCpf(dto.cpf)
-    isEmpty(pacientes, 'CPF já existe')
+    guard(pacientes.length === 0, 'CPF já existe')
 
     const paciente = await this.pacienteRepository.insert(Paciente.from(dto))
 

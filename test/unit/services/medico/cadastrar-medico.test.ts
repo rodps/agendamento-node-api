@@ -4,7 +4,7 @@ import { ApplicationError } from '../../../../src/application/errors/application
 import { Medico } from '../../../../src/application/entity/medico.entity'
 import { MedicoService } from '../../../../src/application/services/medico.service'
 
-describe('Cadastrar Médico', () => {
+describe('Medico Service: cadastrar', () => {
   const medicoRepository = mock<IMedicoRepository>()
   const sut = new MedicoService(medicoRepository)
 
@@ -24,10 +24,14 @@ describe('Cadastrar Médico', () => {
       nome: 'nome'
     }
 
-    // assert
-    await expect(sut.cadastrar(dto)).rejects.toThrow(
-      new ApplicationError('CRM já existe')
-    )
+    // act & assert
+    try {
+      await sut.cadastrar(dto)
+      fail()
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApplicationError)
+      expect(error).toHaveProperty('message', 'CRM já existe')
+    }
   })
 
   test('deve cadastrar um medico', async () => {

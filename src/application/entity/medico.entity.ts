@@ -1,5 +1,5 @@
 import { type MedicoDto } from '../dto/medico/medico.dto'
-import { isNotEmpty } from '../utils/validator'
+import { guard } from '../utils/guard'
 import { ApplicationEntity } from './_application.entity'
 
 export class Medico extends ApplicationEntity {
@@ -10,9 +10,9 @@ export class Medico extends ApplicationEntity {
     readonly especialidade: string
   ) {
     super(id)
-    isNotEmpty(nome, 'Nome obrigatorio')
-    isNotEmpty(crm, 'CRM obrigatorio')
-    isNotEmpty(especialidade, 'Especialidade obrigatorio')
+    guard(nome, 'Nome obrigatorio')
+    guard(crm, 'CRM obrigatorio')
+    guard(especialidade, 'Especialidade obrigatorio')
   }
 
   static from (dto: MedicoDto): Medico {

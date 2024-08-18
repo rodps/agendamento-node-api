@@ -4,7 +4,7 @@ import { PacienteService } from '../../../../src/application/services/paciente.s
 import { Paciente } from '../../../../src/application/entity/paciente.entity'
 import { ApplicationError } from '../../../../src/application/errors/application.error'
 
-describe('Cadastrar Paciente', () => {
+describe('Paciente Service: cadastrar', () => {
   const pacienteRepository = mock<IPacienteRepository>()
   const sut = new PacienteService(pacienteRepository)
 
@@ -56,10 +56,14 @@ describe('Cadastrar Paciente', () => {
         new Paciente(1, 'nome', '123', '123', '2022-01-01')
       ])
 
-    // assert
-    await expect(sut.cadastrar(dto)).rejects.toThrow(
-      new ApplicationError('CPF já existe')
-    )
+    // act & assert
+    try {
+      await sut.cadastrar(dto)
+      fail()
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApplicationError)
+      expect(error).toHaveProperty('message', 'CPF já existe')
+    }
   })
 
   test('deve chamar o repository corretamente', async () => {

@@ -7,14 +7,14 @@ import { ConsultaService } from '../../../../src/application/services/consulta.s
 import { type ConsultaDto } from '../../../../src/application/dto/consulta/consulta.dto'
 import { ApplicationError } from '../../../../src/application/errors/application.error'
 
-describe('Agendar Consulta', () => {
+describe('Consulta Service: agendar', () => {
   const consultaRepository = mock<IConsultaRepository>()
   const medicoRepository = mock<IMedicoRepository>()
   const pacienteRepository = mock<IPacienteRepository>()
 
   const sut = new ConsultaService(consultaRepository, medicoRepository, pacienteRepository)
 
-  const initializeMocks = (): void => {
+  beforeAll(() => {
     consultaRepository.buscarPorData.mockResolvedValue([])
     consultaRepository.insert.mockResolvedValue(
       new Consulta(
@@ -34,10 +34,6 @@ describe('Agendar Consulta', () => {
     pacienteRepository.buscarPorId.mockResolvedValue(
       new Paciente(1, 'cpf', 'nome', '12345678910', '2022-01-01')
     )
-  }
-
-  beforeAll(() => {
-    initializeMocks()
   })
 
   test('deve chamar o repository corretamente', async () => {
@@ -87,13 +83,14 @@ describe('Agendar Consulta', () => {
         )
       ])
 
-    // act
-    const promise = sut.agendar(data)
-
-    // assert
-    await expect(promise).rejects.toThrow(
-      new ApplicationError('Horário indisponível')
-    )
+    // act & assert
+    try {
+      await sut.agendar(data)
+      fail()
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApplicationError)
+      expect(error).toHaveProperty('message', 'Horário indisponível')
+    }
   })
 
   test('deve retornar uma consulta', async () => {

@@ -2,9 +2,9 @@ import { mock } from 'jest-mock-extended'
 import { type IUsuarioRepository } from '../../../../src/application/interfaces/repository.interface'
 import { UserRole, Usuario } from '../../../../src/application/entity/usuario.entity'
 import { type IEncryptionService } from '../../../../src/application/interfaces/encryption-service.interface'
-import { ApplicationError } from '../../../../src/application/errors/application.error'
 import { AuthService } from '../../../../src/application/services/auth.service'
 import { type IJwtService } from '../../../../src/application/interfaces/jwt-service.interface'
+import { ApplicationError } from '../../../../src/application/errors/application.error'
 
 describe('Auth Service: cadastrar usuário', () => {
   const usuarioRepository = mock<IUsuarioRepository>()
@@ -16,7 +16,7 @@ describe('Auth Service: cadastrar usuário', () => {
     // arrange
     jest
       .spyOn(usuarioRepository, 'buscarPorEmail')
-      .mockResolvedValueOnce(
+      .mockResolvedValue(
         new Usuario(
           1,
           'nome',
@@ -32,13 +32,14 @@ describe('Auth Service: cadastrar usuário', () => {
       password: '123'
     }
 
-    // act
-    const response = sut.cadastrar(dto)
-
-    // assert
-    await expect(response).rejects.toThrow(
-      new Error('Este email já está cadastrado')
-    )
+    // act & assert
+    try {
+      await sut.cadastrar(dto)
+      fail()
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApplicationError)
+      expect(error).toHaveProperty('message', 'Este email já está cadastrado')
+    }
   })
 
   test('deve retornar um erro caso a senha seja fraca', async () => {
@@ -49,13 +50,18 @@ describe('Auth Service: cadastrar usuário', () => {
       password: '123'
     }
 
-    // act
-    const response = sut.cadastrar(dto)
+    jest
+      .spyOn(usuarioRepository, 'buscarPorEmail')
+      .mockResolvedValue(null)
 
-    // assert
-    await expect(response).rejects.toThrow(
-      new ApplicationError('A senha deve conter pelo menos 8 caracteres')
-    )
+    // act & assert
+    try {
+      await sut.cadastrar(dto)
+      fail()
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApplicationError)
+      expect(error).toHaveProperty('message', 'A senha deve conter pelo menos 8 caracteres')
+    }
   })
 
   test('deve salvar o usuário corretamente', async () => {

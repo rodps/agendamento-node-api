@@ -1,6 +1,6 @@
 import { type PacienteDto } from '../dto/paciente/paciente.dto'
-import { isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
+import { guard } from '../utils/guard'
 
 export class Paciente extends ApplicationEntity {
   constructor (
@@ -11,10 +11,10 @@ export class Paciente extends ApplicationEntity {
     readonly dataNascimento: string
   ) {
     super(id)
-    isNotEmpty(nome, 'Nome obrigatorio')
-    isNotEmpty(telefone, 'Telefone obrigatorio')
-    isNotEmpty(cpf, 'CPF obrigatorio')
-    isNotEmpty(dataNascimento, 'Data de nascimento obrigatorio')
+    guard(nome, 'Nome obrigatorio')
+    guard(telefone, 'Telefone obrigatorio')
+    guard(cpf, 'CPF obrigatorio')
+    guard(dataNascimento, 'Data de nascimento obrigatorio')
   }
 
   static from (dto: PacienteDto): Paciente {

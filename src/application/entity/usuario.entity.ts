@@ -1,6 +1,7 @@
 import { type UsuarioDto } from '../dto/usuario/usuario.dto'
-import { isEmail, isNotEmpty } from '../utils/validator'
 import { ApplicationEntity } from './_application.entity'
+import { EMAIL_REGEX } from '../constants'
+import { guard } from '../utils/guard'
 
 export class Usuario extends ApplicationEntity {
   constructor (
@@ -11,10 +12,10 @@ export class Usuario extends ApplicationEntity {
     public role: UserRole
   ) {
     super(id)
-    isNotEmpty(nome, 'Nome obrigatorio')
-    isNotEmpty(password, 'Password obrigatorio')
-    isEmail(email, 'Email invalido')
-    isNotEmpty(role, 'Role obrigatorio')
+    guard(nome, 'Nome obrigatorio')
+    guard(password, 'Password obrigatorio')
+    guard(RegExp(EMAIL_REGEX).test(email), 'Email invalido')
+    guard(role, 'Role obrigatorio')
   }
 
   static from (dto: UsuarioDto): Usuario {
