@@ -1,6 +1,7 @@
+import { type Usuario } from '../src/application/entity/usuario.entity'
 import db from '../src/db'
-import { createAuthService } from '../src/main/factories/application-services.factory'
-import { createUsuarioRepository } from '../src/main/factories/repositories.factory'
+import { createJwtService } from '../src/main/factories/infrastructure-services.factory'
+import { DBFactory } from './db-factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -19,20 +20,22 @@ export const closeDbConnection = async (): Promise<void> => {
   await db.end()
 }
 
-export const getAuthToken = async (): Promise<string> => {
-  isTestEnv()
-  const authService = createAuthService()
-  const usuarioRepository = createUsuarioRepository()
+export class TestUser {
+  public static instance: TestUser | null = null
 
-  const usuario = await usuarioRepository.buscarPorEmail('testuser_123@test.com')
-  if (usuario == null) {
-    await authService.cadastrar({
-      email: 'testuser_123@test.com',
-      nome: 'testuser_123',
-      password: '12345678'
-    })
+  private constructor (
+    private readonly usuario: Usuario,
+    private readonly jwtService = createJwtService()
+  ) {}
+
+  public static async create (): Promise<TestUser> {
+    if (TestUser.instance === null) {
+      TestUser.instance = new TestUser(await DBFactory.createUsuario())
+    }
+    return TestUser.instance
   }
-  const { token } = await authService.login({ email: 'testuser_123@test.com', password: '12345678' })
 
-  return token
+  public getAuthToken (): string {
+    return this.jwtService.generateToken(this.usuario)
+  }
 }

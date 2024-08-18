@@ -1,6 +1,7 @@
 import { closeDbConnection, deleteAllFromTable } from '../../helpers'
 import request from 'supertest'
 import app from '../../../src/express/app'
+import { DBFactory } from '../../db-factory'
 
 describe('POST /auth/register', () => {
   afterAll(async () => {
@@ -72,5 +73,21 @@ describe('POST /auth/register', () => {
 
     expect(response.status).toBe(400)
     expect(response.body.error.errors).toHaveLength(1)
+  })
+
+  it('deve retornar 400 quando o email ja existir', async () => {
+    const user = await DBFactory.createUsuario()
+
+    const response = await request(app).post('/auth/register').send({
+      nome: 'nome',
+      email: user.email,
+      password: '12345678'
+    })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toEqual({
+      message: 'Este email já está cadastrado',
+      type: 'APPLICATION_ERROR'
+    })
   })
 })
