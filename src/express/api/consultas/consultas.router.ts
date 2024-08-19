@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { createConsultasController } from '../../../main/factories/controllers.factory'
-import { createAuthMiddleware } from '../../../main/factories/middlewares.factory'
+import { makeConsultasController } from '../../../main/factories/controllers.factory'
+import { makeAuthMiddleware } from '../../../main/factories/middlewares.factory'
 
 const consultasRouter = Router()
-const controller = createConsultasController()
-const { handle: auth } = createAuthMiddleware()
+const controller = makeConsultasController()
+const { handle: auth } = makeAuthMiddleware()
 
 consultasRouter.post('/consultas', auth, controller.agendar)
 

@@ -2,29 +2,29 @@ import { AuthService } from '../../application/services/auth.service'
 import { ConsultaService } from '../../application/services/consulta.service'
 import { MedicoService } from '../../application/services/medico.service'
 import { PacienteService } from '../../application/services/paciente.service'
-import { createEncryptionService, createJwtService } from './infrastructure-services.factory'
-import { createConsultaRepository, createMedicoRepository, createPacienteRepository, createUsuarioRepository } from './repositories.factory'
+import { makeEncryptionService, makeJwtService } from './infrastructure-services.factory'
+import { makeConsultaRepository, makeMedicoRepository, makePacienteRepository, makeUsuarioRepository } from './repositories.factory'
 
-export const createAuthService = (): AuthService => {
+export const makeAuthService = (): AuthService => {
   return new AuthService(
-    createEncryptionService(),
-    createUsuarioRepository(),
-    createJwtService()
+    makeEncryptionService(),
+    makeUsuarioRepository(),
+    makeJwtService()
   )
 }
 
-export const createConsultaService = (): ConsultaService => {
+export const makeConsultaService = (): ConsultaService => {
   return new ConsultaService(
-    createConsultaRepository(),
-    createMedicoRepository(),
-    createPacienteRepository()
+    makeConsultaRepository(),
+    makeMedicoRepository(),
+    makePacienteRepository()
   )
 }
 
-export const createMedicoService = (): MedicoService => {
-  return new MedicoService(createMedicoRepository())
+export const makeMedicoService = (): MedicoService => {
+  return new MedicoService(makeMedicoRepository())
 }
 
-export const createPacienteService = (): PacienteService => {
-  return new PacienteService(createPacienteRepository())
+export const makePacienteService = (): PacienteService => {
+  return new PacienteService(makePacienteRepository())
 }

@@ -3,10 +3,10 @@ import { type IJwtService } from '../../application/interfaces/jwt-service.inter
 import { EncryptionService } from '../../infrastructure/services/encryption.service'
 import { JwtService } from '../../infrastructure/services/jwt.service'
 
-export const createEncryptionService = (): IEncryptionService => {
+export const makeEncryptionService = (): IEncryptionService => {
   return new EncryptionService()
 }
 
-export const createJwtService = (): IJwtService => {
+export const makeJwtService = (): IJwtService => {
   return new JwtService()
 }

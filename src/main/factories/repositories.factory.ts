@@ -4,18 +4,18 @@ import { MedicoRepository } from '../../infrastructure/repositories/medico.repos
 import { PacienteRepository } from '../../infrastructure/repositories/paciente.repository'
 import { UsuarioRepository } from '../../infrastructure/repositories/usuario.repository'
 
-export const createConsultaRepository = (): IConsultaRepository => {
+export const makeConsultaRepository = (): IConsultaRepository => {
   return new ConsultaRepository()
 }
 
-export const createMedicoRepository = (): IMedicoRepository => {
+export const makeMedicoRepository = (): IMedicoRepository => {
   return new MedicoRepository()
 }
 
-export const createPacienteRepository = (): IPacienteRepository => {
+export const makePacienteRepository = (): IPacienteRepository => {
   return new PacienteRepository()
 }
 
-export const createUsuarioRepository = (): IUsuarioRepository => {
+export const makeUsuarioRepository = (): IUsuarioRepository => {
   return new UsuarioRepository()
 }

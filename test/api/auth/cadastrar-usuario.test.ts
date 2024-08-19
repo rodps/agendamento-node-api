@@ -1,7 +1,7 @@
 import { closeDbConnection, deleteAllFromTable } from '../../helpers'
 import request from 'supertest'
 import app from '../../../src/express/app'
-import { DBFactory } from '../../db-factory'
+import { createUsuario } from '../../db-factory'
 
 describe('POST /auth/register', () => {
   afterAll(async () => {
@@ -76,7 +76,7 @@ describe('POST /auth/register', () => {
   })
 
   it('deve retornar 400 quando o email ja existir', async () => {
-    const user = await DBFactory.createUsuario()
+    const user = await createUsuario()
 
     const response = await request(app).post('/auth/register').send({
       nome: 'nome',

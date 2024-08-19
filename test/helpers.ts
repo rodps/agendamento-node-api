@@ -1,7 +1,7 @@
 import { type Usuario } from '../src/application/entity/usuario.entity'
 import db from '../src/db'
-import { createJwtService } from '../src/main/factories/infrastructure-services.factory'
-import { DBFactory } from './db-factory'
+import { makeJwtService } from '../src/main/factories/infrastructure-services.factory'
+import { createUsuario } from './db-factory'
 
 export const isTestEnv = (): void => {
   if (process.env.NODE_ENV !== 'test') {
@@ -25,12 +25,12 @@ export class TestUser {
 
   private constructor (
     private readonly usuario: Usuario,
-    private readonly jwtService = createJwtService()
+    private readonly jwtService = makeJwtService()
   ) {}
 
   public static async create (): Promise<TestUser> {
     if (TestUser.instance === null) {
-      TestUser.instance = new TestUser(await DBFactory.createUsuario())
+      TestUser.instance = new TestUser(await createUsuario())
     }
     return TestUser.instance
   }

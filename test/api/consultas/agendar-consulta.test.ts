@@ -1,7 +1,7 @@
 import request from 'supertest'
 import app from '../../../src/express/app'
 import { closeDbConnection, deleteAllFromTable, TestUser } from '../../helpers'
-import { DBFactory } from '../../db-factory'
+import { createConsulta, createMedico, createPaciente } from '../../db-factory'
 
 describe('POST /consultas', () => {
   let token = ''
@@ -34,8 +34,8 @@ describe('POST /consultas', () => {
   })
 
   test('deve retornar 201', async () => {
-    const medico = await DBFactory.createMedico()
-    const paciente = await DBFactory.createPaciente()
+    const medico = await createMedico()
+    const paciente = await createPaciente()
 
     const result = await request(app).post('/consultas').send({
       dataInicio: '2022-01-03T00:00:00.000Z',
@@ -66,7 +66,7 @@ describe('POST /consultas', () => {
   })
 
   test('deve retornar 400 quando o pacienteId for invalido', async () => {
-    const medico = await DBFactory.createMedico()
+    const medico = await createMedico()
 
     const result = await request(app).post('/consultas').send({
       dataInicio: '2022-01-01T00:00:00.000Z',
@@ -80,8 +80,8 @@ describe('POST /consultas', () => {
   })
 
   test('deve retornar 400 quando a data de inicio for vazia', async () => {
-    const medico = await DBFactory.createMedico()
-    const paciente = await DBFactory.createPaciente()
+    const medico = await createMedico()
+    const paciente = await createPaciente()
 
     const result = await request(app).post('/consultas').send({
       dataFim: '2022-01-01T01:00:00.000Z',
@@ -107,8 +107,8 @@ describe('POST /consultas', () => {
   })
 
   test('deve retornar 400 quando a data de inicio for maior que a data de fim', async () => {
-    const medico = await DBFactory.createMedico()
-    const paciente = await DBFactory.createPaciente()
+    const medico = await createMedico()
+    const paciente = await createPaciente()
 
     const result = await request(app).post('/consultas').send({
       dataInicio: '2022-01-01T01:00:00.000Z',
@@ -124,9 +124,9 @@ describe('POST /consultas', () => {
   })
 
   test('deve retornar 400 quando o horário estiver indisponível', async () => {
-    const medico = await DBFactory.createMedico()
-    const paciente = await DBFactory.createPaciente()
-    const consulta = await DBFactory.createConsulta(medico, paciente)
+    const medico = await createMedico()
+    const paciente = await createPaciente()
+    const consulta = await createConsulta(medico, paciente)
 
     const result = await request(app).post('/consultas').send({
       dataInicio: consulta.dataInicio,

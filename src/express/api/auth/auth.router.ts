@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from 'express'
-import { createAuthController } from '../../../main/factories/controllers.factory'
+import { makeAuthController } from '../../../main/factories/controllers.factory'
 
 const authRouter = Router()
-const controller = createAuthController()
+const controller = makeAuthController()
 
 authRouter
   .post('/auth/login', controller.login)
